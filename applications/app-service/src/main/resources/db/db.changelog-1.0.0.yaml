@@ -1,0 +1,95 @@
+databaseChangeLog:
+    - changeSet:
+          id: Creacion de la tabla rol
+          author: Waldir Maidana
+          changes:
+              - createTable:
+                    tableName: rol
+                    tableOptions: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+                    columns:
+                        - column:
+                              name: id_rol
+                              type: BIGINT
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: pk_rol
+                                  nullable: false
+                        - column:
+                              name: nombre
+                              type: VARCHAR(100)
+                              constraints:
+                                  nullable: false
+                        - column:
+                              name: descripcion
+                              type: VARCHAR(255)
+                              constraints:
+                                  nullable: false
+              - addUniqueConstraint:
+                    tableName: rol
+                    columnNames: nombre
+                    constraintName: uq_rol_nombre
+
+    - changeSet:
+          id: Creacion de la tabla usuario
+          author: Waldir Maidana
+          changes:
+              - createTable:
+                    tableName: usuario
+                    tableOptions: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+                    columns:
+                        - column:
+                              name: id_usuario
+                              type: BIGINT
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                                  primaryKeyName: pk_usuario
+                                  nullable: false
+                        - column:
+                              name: nombre
+                              type: VARCHAR(100)
+                              constraints:
+                                  nullable: false
+                        - column:
+                              name: apellido
+                              type: VARCHAR(100)
+                              constraints:
+                                  nullable: false
+                        - column:
+                              name: email
+                              type: VARCHAR(150)
+                              constraints:
+                                  nullable: false
+                        - column:
+                              name: documento_identidad
+                              type: VARCHAR(50)
+                        - column:
+                              name: telefono
+                              type: VARCHAR(30)
+                        - column:
+                              name: id_rol
+                              type: BIGINT
+                        - column:
+                              name: salario_base
+                              type: DECIMAL(15,2)
+                              constraints:
+                                  nullable: false
+              - addUniqueConstraint:
+                    tableName: usuario
+                    columnNames: email
+                    constraintName: uq_usuario_email
+              - createIndex:
+                    tableName: usuario
+                    indexName: idx_usuario_id_rol
+                    columns:
+                        - column:
+                              name: id_rol
+              - addForeignKeyConstraint:
+                    baseTableName: usuario
+                    baseColumnNames: id_rol
+                    referencedTableName: rol
+                    referencedColumnNames: id_rol
+                    constraintName: fk_usuario_rol
+                    onDelete: RESTRICT
+                    onUpdate: CASCADE
