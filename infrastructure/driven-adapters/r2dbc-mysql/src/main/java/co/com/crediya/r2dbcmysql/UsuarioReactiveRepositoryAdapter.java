@@ -26,9 +26,9 @@ public class UsuarioReactiveRepositoryAdapter extends ReactiveAdapterOperations<
 
     @Override
     public Mono<Usuario> crear(Usuario usuario) {
-        UsuarioEntity entity = mapper.map(usuario, UsuarioEntity.class);
+        UsuarioEntity entity = usuarioEntityMapper.toEntity(usuario);
         return super.repository.save(entity)
-                .map(data -> mapper.map(data, Usuario.class));
+                .map(usuarioEntityMapper::toDomain);
     }
 
     @Override

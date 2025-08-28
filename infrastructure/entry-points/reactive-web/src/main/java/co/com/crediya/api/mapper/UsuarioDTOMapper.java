@@ -6,9 +6,11 @@ import co.com.crediya.model.usuario.Usuario;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.mapstruct.ObjectFactory;
 
 @Mapper(componentModel = "spring")
 public interface UsuarioDTOMapper {
+    @ObjectFactory
     default Usuario toModel(CrearUsuarioDTO dto) {
         if (dto == null) return null;
         return Usuario.crear(

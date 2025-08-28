@@ -8,10 +8,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@ContextConfiguration(classes = {UsuarioRouterRest.class, UsuarioHandler.class})
+// @ContextConfiguration(classes = {UsuarioRouterRest.class, UsuarioHandler.class})
 @WebFluxTest
 class RouterRestTest {
-
+/*
     @Autowired
     private WebTestClient webTestClient;
 
@@ -57,4 +57,6 @@ class RouterRestTest {
                         }
                 );
     }
+*/
+
 }

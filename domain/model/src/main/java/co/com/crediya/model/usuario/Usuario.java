@@ -24,8 +24,8 @@ public class Usuario {
         this.nombre = nombre.trim();
         this.apellido = apellido.trim();
         this.email = email.trim();
-        this.documentoIdentidad = documentoIdentidad;
-        this.telefono = telefono;
+        this.documentoIdentidad = documentoIdentidad == null ? null : documentoIdentidad.trim();
+        this.telefono = telefono == null ? null : telefono.trim();
         this.idRol = idRol;
         this.salarioBase = salarioBase;
     }

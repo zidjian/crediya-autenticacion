@@ -27,9 +27,9 @@ adapters:
     r2dbc:
         host: "localhost"
         port: 3306
-        database: "autenticacion_db"
-        username: "zidjian"
-        password: "002092Az"
+        database: "crediya_autenticacion"
+        username: "root"
+        password: "root"
 
 cors:
     allowed-origins: "http://localhost:8080"
