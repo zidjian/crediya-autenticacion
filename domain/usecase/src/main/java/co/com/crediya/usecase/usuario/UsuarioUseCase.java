@@ -17,4 +17,11 @@ public class UsuarioUseCase {
                                 : usuarioRepository.crear(usuario)
                 );
     }
+
+    public Mono<Usuario> buscarUsuarioPorDocumentoIdentidad(String documentoIdentidad) {
+        if (documentoIdentidad == null || documentoIdentidad.trim().isEmpty()) {
+            return Mono.error(new IllegalArgumentException("El documento de identidad es requerido"));
+        }
+        return usuarioRepository.buscarPorDocumentoIdentidad(documentoIdentidad.trim());
+    }
 }

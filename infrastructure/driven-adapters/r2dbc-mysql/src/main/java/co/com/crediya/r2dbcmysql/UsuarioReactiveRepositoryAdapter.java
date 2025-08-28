@@ -35,4 +35,10 @@ public class UsuarioReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     public Mono<Boolean> existePorEmail(String email) {
         return super.repository.existsByEmail( email);
     }
+
+    @Override
+    public Mono<Usuario> buscarPorDocumentoIdentidad(String documentoIdentidad) {
+        return super.repository.findByDocumentoIdentidad(documentoIdentidad)
+                .map(usuarioEntityMapper::toDomain);
+    }
 }

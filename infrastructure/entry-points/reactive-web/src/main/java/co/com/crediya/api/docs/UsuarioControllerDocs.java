@@ -4,6 +4,8 @@ import co.com.crediya.api.UsuarioHandler;
 import co.com.crediya.api.dto.CrearUsuarioDTO;
 import co.com.crediya.api.dto.RespuestaUsuarioDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -40,6 +42,35 @@ public interface UsuarioControllerDocs {
                                             content = @Content(schema = @Schema(implementation = RespuestaUsuarioDTO.class))),
                                     @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
                                     @ApiResponse(responseCode = "409", description = "Usuario ya existe")
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/usuarios/documento/{documento}",
+                    produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.GET,
+                    beanClass = UsuarioHandler.class,
+                    beanMethod = "escucharBuscarUsuarioPorDocumento",
+                    operation = @Operation(
+                            operationId = "getUserByDocument",
+                            summary = "Buscar usuario por documento de identidad",
+                            description = "Busca un usuario por su documento de identidad. Retorna el usuario completo si existe, o un error 404 si no se encuentra",
+                            tags = {"Usuarios"},
+                            parameters = {
+                                    @Parameter(
+                                            name = "documento",
+                                            description = "Documento de identidad del usuario a buscar",
+                                            required = true,
+                                            in = ParameterIn.PATH,
+                                            schema = @Schema(type = "string"),
+                                            example = "12345678"
+                                    )
+                            },
+                            responses = {
+                                    @ApiResponse(responseCode = "200", description = "Usuario encontrado",
+                                            content = @Content(schema = @Schema(implementation = RespuestaUsuarioDTO.class))),
+                                    @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+                                    @ApiResponse(responseCode = "400", description = "Documento de identidad inválido")
                             }
                     )
             )

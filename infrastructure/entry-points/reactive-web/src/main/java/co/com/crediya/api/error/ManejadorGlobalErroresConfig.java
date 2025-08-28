@@ -2,6 +2,7 @@ package co.com.crediya.api.error;
 
 import co.com.crediya.usecase.usuario.exceptions.NegocioException;
 import co.com.crediya.usecase.usuario.exceptions.UsuarioYaExisteException;
+import co.com.crediya.usecase.usuario.exceptions.UsuarioNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.WebProperties;
@@ -76,6 +77,16 @@ public class ManejadorGlobalErroresConfig {
                 payload = ErrorResponse.of(
                         uae.getCode(),
                         "El usuario ya existe: " + uae.getEmail(),
+                        status.value(),
+                        request.path(),
+                        null,
+                        idCorrelacion
+                );
+            } else if (ex instanceof UsuarioNotFoundException unfe) {
+                status = HttpStatus.NOT_FOUND;
+                payload = ErrorResponse.of(
+                        "USUARIO_NO_ENCONTRADO",
+                        unfe.getMessage(),
                         status.value(),
                         request.path(),
                         null,
