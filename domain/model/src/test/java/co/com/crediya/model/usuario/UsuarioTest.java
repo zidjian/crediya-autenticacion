@@ -9,64 +9,176 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UsuarioTest {
+
+    // Constantes para datos de prueba
+    private static final Long ID_USUARIO_VALIDO = 1L;
+    private static final String NOMBRE_VALIDO = "Juan";
+    private static final String APELLIDO_VALIDO = "Perez";
+    private static final String EMAIL_VALIDO = "test@email.com";
+    private static final String DOCUMENTO_VALIDO = "123456789";
+    private static final String TELEFONO_VALIDO = "917084202";
+    private static final Long ID_ROL_VALIDO = 1L;
+    private static final BigDecimal SALARIO_VALIDO = BigDecimal.valueOf(1000);
+
     @Nested
     @DisplayName("Invariantes de negocio")
     class Invariants {
 
         @Test
-        @DisplayName("Debe requerir nombre, apellido, email, salario")
-        void shouldRequireMandatoryFields() {
-            // Nombre obligatorio
-            IllegalArgumentException ex1 = assertThrows(IllegalArgumentException.class,
-                    () -> Usuario.crear(null, "Perez", "test@email.com", "123456789", "917084202", 1L, BigDecimal.valueOf(1000)));
-            assertEquals("El nombre es obligatorio", ex1.getMessage());
+        @DisplayName("Debe rechazar nombre null")
+        void shouldRejectNullNombre() {
+            // Arrange
+            String nombreNull = null;
 
-            IllegalArgumentException ex2 = assertThrows(IllegalArgumentException.class,
-                    () -> Usuario.crear("", "Perez", "test@email.com", "123456789", "917084202", 1L, BigDecimal.valueOf(1000)));
-            assertEquals("El nombre es obligatorio", ex2.getMessage());
+            // Act & Assert
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO,nombreNull, APELLIDO_VALIDO, EMAIL_VALIDO,
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
 
-            IllegalArgumentException ex3 = assertThrows(IllegalArgumentException.class,
-                    () -> Usuario.crear("   ", "Perez", "test@email.com", "123456789", "917084202", 1L, BigDecimal.valueOf(1000)));
-            assertEquals("El nombre es obligatorio", ex3.getMessage());
-
-            // Apellido obligatorio
-            IllegalArgumentException ex4 = assertThrows(IllegalArgumentException.class,
-                    () -> Usuario.crear("Juan", null, "test@email.com", "123456789", "917084202", 1L, BigDecimal.valueOf(1000)));
-            assertEquals("El apellido es obligatorio", ex4.getMessage());
-
-            IllegalArgumentException ex5 = assertThrows(IllegalArgumentException.class,
-                    () -> Usuario.crear("Juan", "", "test@email.com", "123456789", "917084202", 1L, BigDecimal.valueOf(1000)));
-            assertEquals("El apellido es obligatorio", ex5.getMessage());
-
-            // Email obligatorio
-            IllegalArgumentException ex6 = assertThrows(IllegalArgumentException.class,
-                    () -> Usuario.crear("Juan", "Perez", null, "123456789", "917084202", 1L, BigDecimal.valueOf(1000)));
-            assertEquals("El email es obligatorio", ex6.getMessage());
-
-            IllegalArgumentException ex7 = assertThrows(IllegalArgumentException.class,
-                    () -> Usuario.crear("Juan", "Perez", "   ", "123456789", "917084202", 1L, BigDecimal.valueOf(1000)));
-            assertEquals("El email es obligatorio", ex7.getMessage());
-
-            // Salario obligatorio
-            IllegalArgumentException ex8 = assertThrows(IllegalArgumentException.class,
-                    () -> Usuario.crear("Juan", "Perez", "test@email.com", "123456789", "917084202", 1L, null));
-            assertEquals("El salarioBase es obligatorio", ex8.getMessage());
+            assertEquals("El nombre es obligatorio", exception.getMessage());
         }
 
         @Test
-        @DisplayName("Debe permitir campos opcionales como null")
-        void shouldAllowOptionalFieldsAsNull() {
-            // Teléfono puede ser null
-            assertDoesNotThrow(() ->
-                    Usuario.crear("Juan", "Perez", "test@email.com", "123456789", null, 1L, BigDecimal.valueOf(1000)));
+        @DisplayName("Debe rechazar nombre vacío")
+        void shouldRejectEmptyNombre() {
+            // Arrange
+            String nombreVacio = "";
 
-            // IdRol puede ser null
-            assertDoesNotThrow(() ->
-                    Usuario.crear("Juan", "Perez", "test@email.com", "123456789", "917084202", null, BigDecimal.valueOf(1000)));
+            // Act & Assert
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO, nombreVacio, APELLIDO_VALIDO, EMAIL_VALIDO,
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
 
-            // Documento de identidad puede ser null
-            assertDoesNotThrow(() ->
-                    Usuario.crear("Juan", "Perez", "test@email.com", null, "917084202", 1L, BigDecimal.valueOf(1000)));
+            assertEquals("El nombre es obligatorio", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Debe rechazar nombre con solo espacios")
+        void shouldRejectBlankNombre() {
+            // Arrange
+            String nombreEspacios = "   ";
+
+            // Act & Assert
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO, nombreEspacios, APELLIDO_VALIDO, EMAIL_VALIDO,
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+
+            assertEquals("El nombre es obligatorio", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Debe rechazar apellido null")
+        void shouldRejectNullApellido() {
+            // Arrange
+            String apellidoNull = null;
+
+            // Act & Assert
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoNull, EMAIL_VALIDO,
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+
+            assertEquals("El apellido es obligatorio", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Debe rechazar apellido vacío")
+        void shouldRejectEmptyApellido() {
+            // Arrange
+            String apellidoVacio = "";
+
+            // Act & Assert
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoVacio, EMAIL_VALIDO,
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+
+            assertEquals("El apellido es obligatorio", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Debe rechazar email null")
+        void shouldRejectNullEmail() {
+            // Arrange
+            String emailNull = null;
+
+            // Act & Assert
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, emailNull,
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+
+            assertEquals("El email es obligatorio", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Debe rechazar email con solo espacios")
+        void shouldRejectBlankEmail() {
+            // Arrange
+            String emailEspacios = "   ";
+
+            // Act & Assert
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, emailEspacios,
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+
+            assertEquals("El email es obligatorio", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Debe rechazar salario null")
+        void shouldRejectNullSalario() {
+            // Arrange
+            BigDecimal salarioNull = null;
+
+            // Act & Assert
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, salarioNull));
+
+            assertEquals("El salarioBase es obligatorio", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Debe permitir teléfono null")
+        void shouldAllowNullTelefono() {
+            // Arrange
+            String telefonoNull = null;
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, telefonoNull, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertNotNull(usuario);
+            assertNull(usuario.getTelefono());
+        }
+
+        @Test
+        @DisplayName("Debe permitir idRol null")
+        void shouldAllowNullIdRol() {
+            // Arrange
+            Long idRolNull = null;
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, idRolNull, SALARIO_VALIDO);
+
+            // Assert
+            assertNotNull(usuario);
+            assertNull(usuario.getIdRol());
+        }
+
+        @Test
+        @DisplayName("Debe permitir documento de identidad null")
+        void shouldAllowNullDocumentoIdentidad() {
+            // Arrange
+            String documentoNull = null;
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    documentoNull, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertNotNull(usuario);
+            assertNull(usuario.getDocumentoIdentidad());
         }
     }
 
@@ -75,95 +187,392 @@ public class UsuarioTest {
     class Functionality {
 
         @Test
-        @DisplayName("Debe recortar espacios en blanco de los campos de texto")
-        void shouldTrimStringFields() {
-            Usuario usuario = Usuario.crear("  Juan  ", " Perez ", "  test@email.com  ",
-                    "  123456789  ", "  917084202  ", 1L, BigDecimal.valueOf(1000));
+        @DisplayName("Debe recortar espacios en blanco del nombre")
+        void shouldTrimNombre() {
+            // Arrange
+            String nombreConEspacios = "  Juan  ";
 
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, nombreConEspacios, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
             assertEquals("Juan", usuario.getNombre());
-            assertEquals("Perez", usuario.getApellido());
-            assertEquals("test@email.com", usuario.getEmail());
-            assertEquals("123456789", usuario.getDocumentoIdentidad());
-            assertEquals("917084202", usuario.getTelefono());
         }
 
         @Test
-        @DisplayName("Debe manejar teléfono null correctamente")
-        void shouldHandleNullTelefono() {
-            Usuario usuario = Usuario.crear("Juan", "Perez", "test@email.com", "123456789", null, 1L, BigDecimal.valueOf(1000));
+        @DisplayName("Debe recortar espacios en blanco del apellido")
+        void shouldTrimApellido() {
+            // Arrange
+            String apellidoConEspacios = " Perez ";
 
-            assertNull(usuario.getTelefono());
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoConEspacios, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertEquals("Perez", usuario.getApellido());
+        }
+
+        @Test
+        @DisplayName("Debe recortar espacios en blanco del email")
+        void shouldTrimEmail() {
+            // Arrange
+            String emailConEspacios = "  test@email.com  ";
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, emailConEspacios,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertEquals("test@email.com", usuario.getEmail());
+        }
+
+        @Test
+        @DisplayName("Debe recortar espacios en blanco del documento de identidad")
+        void shouldTrimDocumentoIdentidad() {
+            // Arrange
+            String documentoConEspacios = "  123456789  ";
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    documentoConEspacios, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertEquals("123456789", usuario.getDocumentoIdentidad());
+        }
+
+        @Test
+        @DisplayName("Debe recortar espacios en blanco del teléfono")
+        void shouldTrimTelefono() {
+            // Arrange
+            String telefonoConEspacios = "  917084202  ";
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, telefonoConEspacios, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertEquals("917084202", usuario.getTelefono());
         }
 
         @Test
         @DisplayName("Debe crear usuario sin ID inicialmente")
         void shouldCreateUsuarioWithoutId() {
-            Usuario usuario = Usuario.crear("Juan", "Perez", "test@email.com", "123456789", "917084202", 1L, BigDecimal.valueOf(1000));
+            // Arrange
+            // Datos de usuario válidos ya definidos en constantes
 
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertNotNull(usuario);
             assertNull(usuario.getIdUsuario());
         }
 
         @Test
         @DisplayName("Debe poder asignar ID usando conId")
         void shouldAssignIdUsingConId() {
-            Usuario userSinId = Usuario.crear("Juan", "Perez", "test@email.com", "123456789", "917084202", 1L, BigDecimal.valueOf(1000));
-            Usuario userConId = userSinId.conId(42L);
+            // Arrange
+            Long idEsperado = 42L;
+            Usuario usuarioSinId = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
 
-            assertNull(userSinId.getIdUsuario());
-            assertEquals(42L, userConId.getIdUsuario());
+            // Act
+            Usuario usuarioConId = usuarioSinId.conId(idEsperado);
+
+            // Assert
+            assertNull(usuarioSinId.getIdUsuario());
+            assertEquals(idEsperado, usuarioConId.getIdUsuario());
 
             // Verificar que los demás campos se mantienen
-            assertEquals(userSinId.getNombre(), userConId.getNombre());
-            assertEquals(userSinId.getApellido(), userConId.getApellido());
-            assertEquals(userSinId.getEmail(), userConId.getEmail());
-            assertEquals(userSinId.getDocumentoIdentidad(), userConId.getDocumentoIdentidad());
-            assertEquals(userSinId.getTelefono(), userConId.getTelefono());
-            assertEquals(userSinId.getIdRol(), userConId.getIdRol());
-            assertEquals(userSinId.getSalarioBase(), userConId.getSalarioBase());
+            assertEquals(usuarioSinId.getNombre(), usuarioConId.getNombre());
+            assertEquals(usuarioSinId.getApellido(), usuarioConId.getApellido());
+            assertEquals(usuarioSinId.getEmail(), usuarioConId.getEmail());
+            assertEquals(usuarioSinId.getDocumentoIdentidad(), usuarioConId.getDocumentoIdentidad());
+            assertEquals(usuarioSinId.getTelefono(), usuarioConId.getTelefono());
+            assertEquals(usuarioSinId.getIdRol(), usuarioConId.getIdRol());
+            assertEquals(usuarioSinId.getSalarioBase(), usuarioConId.getSalarioBase());
         }
 
         @Test
         @DisplayName("Debe mantener inmutabilidad")
         void shouldMaintainImmutability() {
-            Usuario original = Usuario.crear("Juan", "Perez", "test@email.com", "123456789", "917084202", 1L, BigDecimal.valueOf(1000));
-            Usuario conId = original.conId(42L);
+            // Arrange
+            Usuario usuarioOriginal = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
 
-            // Los objetos deben ser diferentes
-            assertNotSame(original, conId);
+            // Act
+            Usuario usuarioConId = usuarioOriginal.conId(42L);
 
-            // El objeto original no debe cambiar
-            assertNull(original.getIdUsuario());
-            assertEquals(42L, conId.getIdUsuario());
+            // Assert
+            assertNotEquals(usuarioOriginal, usuarioConId);
+            assertNull(usuarioOriginal.getIdUsuario());
+            assertEquals(42L, usuarioConId.getIdUsuario());
+        }
+
+        @Test
+        @DisplayName("Debe crear usuario válido con todos los campos opcionales null")
+        void shouldCreateValidUsuarioWithAllOptionalFieldsNull() {
+            // Arrange
+            String documentoNull = null;
+            String telefonoNull = null;
+            Long idRolNull = null;
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    documentoNull, telefonoNull, idRolNull, SALARIO_VALIDO);
+
+            // Assert
+            assertNotNull(usuario);
+            assertEquals(NOMBRE_VALIDO, usuario.getNombre());
+            assertEquals(APELLIDO_VALIDO, usuario.getApellido());
+            assertEquals(EMAIL_VALIDO, usuario.getEmail());
+            assertNull(usuario.getDocumentoIdentidad());
+            assertNull(usuario.getTelefono());
+            assertNull(usuario.getIdRol());
+            assertEquals(SALARIO_VALIDO, usuario.getSalarioBase());
+        }
+
+        @Test
+        @DisplayName("Debe recortar espacios del documento cuando no es null")
+        void shouldTrimDocumentoWhenNotNull() {
+            // Arrange
+            String documentoConEspacios = "  123456789  ";
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    documentoConEspacios, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertEquals("123456789", usuario.getDocumentoIdentidad());
+        }
+
+        @Test
+        @DisplayName("Debe recortar espacios del teléfono cuando no es null")
+        void shouldTrimTelefonoWhenNotNull() {
+            // Arrange
+            String telefonoConEspacios = "  917084202  ";
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, telefonoConEspacios, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertEquals("917084202", usuario.getTelefono());
+        }
+
+        @Test
+        @DisplayName("Debe rechazar apellido con solo espacios")
+        void shouldRejectBlankApellido() {
+            // Arrange
+            String apellidoEspacios = "   ";
+
+            // Act & Assert
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoEspacios, EMAIL_VALIDO,
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+
+            assertEquals("El apellido es obligatorio", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Debe rechazar email vacío")
+        void shouldRejectEmptyEmail() {
+            // Arrange
+            String emailVacio = "";
+
+            // Act & Assert
+            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, emailVacio,
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+
+            assertEquals("El email es obligatorio", exception.getMessage());
+        }
+
+        @Test
+        @DisplayName("Debe preservar valores en conId")
+        void shouldPreserveValuesInConId() {
+            // Arrange
+            Usuario usuarioOriginal = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+            Long nuevoId = 999L;
+
+            // Act
+            Usuario usuarioConId = usuarioOriginal.conId(nuevoId);
+
+            // Assert
+            assertEquals(nuevoId, usuarioConId.getIdUsuario());
+            assertEquals(usuarioOriginal.getNombre(), usuarioConId.getNombre());
+            assertEquals(usuarioOriginal.getApellido(), usuarioConId.getApellido());
+            assertEquals(usuarioOriginal.getEmail(), usuarioConId.getEmail());
+            assertEquals(usuarioOriginal.getDocumentoIdentidad(), usuarioConId.getDocumentoIdentidad());
+            assertEquals(usuarioOriginal.getTelefono(), usuarioConId.getTelefono());
+            assertEquals(usuarioOriginal.getIdRol(), usuarioConId.getIdRol());
+            assertEquals(usuarioOriginal.getSalarioBase(), usuarioConId.getSalarioBase());
+        }
+
+        @Test
+        @DisplayName("Debe permitir ID null en conId")
+        void shouldAllowNullIdInConId() {
+            // Arrange
+            Usuario usuarioOriginal = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+            Long idNull = null;
+
+            // Act
+            Usuario usuarioConId = usuarioOriginal.conId(idNull);
+
+            // Assert
+            assertNull(usuarioConId.getIdUsuario());
+        }
+
+        @Test
+        @DisplayName("Debe validar que getters devuelven valores correctos")
+        void shouldValidateGettersReturnCorrectValues() {
+            // Arrange
+            Long idEsperado = 1L;
+            String nombreEsperado = "Carlos";
+            String apellidoEsperado = "García";
+            String emailEsperado = "carlos@example.com";
+            String documentoEsperado = "987654321";
+            String telefonoEsperado = "3001234567";
+            Long idRolEsperado = 2L;
+            BigDecimal salarioEsperado = new BigDecimal("2500000");
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(idEsperado, nombreEsperado, apellidoEsperado, emailEsperado,
+                    documentoEsperado, telefonoEsperado, idRolEsperado, salarioEsperado)
+                    .conId(idEsperado);
+
+            // Assert
+            assertEquals(idEsperado, usuario.getIdUsuario());
+            assertEquals(nombreEsperado, usuario.getNombre());
+            assertEquals(apellidoEsperado, usuario.getApellido());
+            assertEquals(emailEsperado, usuario.getEmail());
+            assertEquals(documentoEsperado, usuario.getDocumentoIdentidad());
+            assertEquals(telefonoEsperado, usuario.getTelefono());
+            assertEquals(idRolEsperado, usuario.getIdRol());
+            assertEquals(salarioEsperado, usuario.getSalarioBase());
         }
     }
 
     @Nested
-    @DisplayName("Getters")
-    class Getters {
+    @DisplayName("Casos límite y edge cases")
+    class EdgeCases {
 
         @Test
-        @DisplayName("Debe retornar todos los valores correctamente")
-        void shouldReturnAllValuesCorrectly() {
-            Long idUsuario = 1L;
-            String nombre = "Juan";
-            String apellido = "Perez";
-            String email = "test@email.com";
-            String documentoIdentidad = "123456789";
-            String telefono = "917084202";
-            Long idRol = 2L;
-            BigDecimal salarioBase = BigDecimal.valueOf(1500.50);
+        @DisplayName("Debe manejar nombres con caracteres especiales")
+        void shouldHandleNombresWithSpecialCharacters() {
+            // Arrange
+            String nombreEspecial = "José María";
 
-            Usuario user = Usuario.crear(nombre, apellido, email, documentoIdentidad, telefono, idRol, salarioBase)
-                    .conId(idUsuario);
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, nombreEspecial, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
 
-            assertEquals(idUsuario, user.getIdUsuario());
-            assertEquals(nombre, user.getNombre());
-            assertEquals(apellido, user.getApellido());
-            assertEquals(email, user.getEmail());
-            assertEquals(documentoIdentidad, user.getDocumentoIdentidad());
-            assertEquals(telefono, user.getTelefono());
-            assertEquals(idRol, user.getIdRol());
-            assertEquals(salarioBase, user.getSalarioBase());
+            // Assert
+            assertEquals(nombreEspecial, usuario.getNombre());
+        }
+
+        @Test
+        @DisplayName("Debe manejar apellidos con caracteres especiales")
+        void shouldHandleApellidosWithSpecialCharacters() {
+            // Arrange
+            String apellidoEspecial = "Hernández-López";
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoEspecial, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertEquals(apellidoEspecial, usuario.getApellido());
+        }
+
+        @Test
+        @DisplayName("Debe manejar salarios decimales")
+        void shouldHandleDecimalSalarios() {
+            // Arrange
+            BigDecimal salarioDecimal = new BigDecimal("1500000.50");
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, salarioDecimal);
+
+            // Assert
+            assertEquals(salarioDecimal, usuario.getSalarioBase());
+        }
+
+        @Test
+        @DisplayName("Debe manejar salarios cero")
+        void shouldHandleZeroSalario() {
+            // Arrange
+            BigDecimal salarioCero = BigDecimal.ZERO;
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, salarioCero);
+
+            // Assert
+            assertEquals(salarioCero, usuario.getSalarioBase());
+        }
+
+        @Test
+        @DisplayName("Debe manejar IDs grandes")
+        void shouldHandleLargeIds() {
+            // Arrange
+            Long idGrande = Long.MAX_VALUE;
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Act
+            Usuario usuarioConId = usuario.conId(idGrande);
+
+            // Assert
+            assertEquals(idGrande, usuarioConId.getIdUsuario());
+        }
+
+        @Test
+        @DisplayName("Debe manejar emails largos")
+        void shouldHandleLongEmails() {
+            // Arrange
+            String emailLargo = "usuario.con.un.email.muy.largo.para.probar.limites@dominio.muy.largo.com";
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, emailLargo,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertEquals(emailLargo, usuario.getEmail());
+        }
+
+        @Test
+        @DisplayName("Debe manejar nombres de un solo carácter")
+        void shouldHandleSingleCharacterNombre() {
+            // Arrange
+            String nombreCorto = "A";
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, nombreCorto, APELLIDO_VALIDO, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertEquals(nombreCorto, usuario.getNombre());
+        }
+
+        @Test
+        @DisplayName("Debe manejar apellidos de un solo carácter")
+        void shouldHandleSingleCharacterApellido() {
+            // Arrange
+            String apellidoCorto = "B";
+
+            // Act
+            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoCorto, EMAIL_VALIDO,
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+
+            // Assert
+            assertEquals(apellidoCorto, usuario.getApellido());
         }
     }
 }

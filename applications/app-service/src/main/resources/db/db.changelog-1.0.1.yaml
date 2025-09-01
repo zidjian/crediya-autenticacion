@@ -1,0 +1,82 @@
+databaseChangeLog:
+    -   changeSet:
+            id: Insercion de datos semilla en la tabla rol
+            author: Waldir Maidana
+            preConditions:
+                -   not:
+                        -   sqlCheck:
+                                expectedResult: 3
+                                sql: SELECT COUNT(*) FROM rol WHERE id_rol IN (1,2,3)
+            changes:
+                -   insert:
+                        tableName: rol
+                        columns:
+                            -   column:
+                                    name: id_rol
+                                    valueNumeric: 1
+                            -   column:
+                                    name: nombre
+                                    value: administrador
+                            -   column:
+                                    name: descripcion
+                                    value: Rol con privilegios de administrador
+                -   insert:
+                        tableName: rol
+                        columns:
+                            -   column:
+                                    name: id_rol
+                                    valueNumeric: 2
+                            -   column:
+                                    name: nombre
+                                    value: asesor
+                            -   column:
+                                    name: descripcion
+                                    value: Rol con privilegios de asesor
+                -   insert:
+                        tableName: rol
+                        columns:
+                            -   column:
+                                    name: id_rol
+                                    valueNumeric: 3
+                            -   column:
+                                    name: nombre
+                                    value: cliente
+                            -   column:
+                                    name: descripcion
+                                    value: Rol con privilegios de cliente
+    -   changeSet:
+            id: Insercion de datos semilla en la tabla usuarios
+            author: Waldir Maidana
+            preConditions:
+                -   not:
+                        -   sqlCheck:
+                                expectedResult: 1
+                                sql: SELECT COUNT(*) FROM usuario WHERE id_usuario = 1
+            changes:
+                -   insert:
+                        tableName: usuario
+                        columns:
+                            -   column:
+                                    name: id_usuario
+                                    valueNumeric: 1
+                            -   column:
+                                    name: nombre
+                                    value: Waldir
+                            -   column:
+                                    name: apellido
+                                    value: Maidana
+                            -   column:
+                                    name: email
+                                    value: waldirmaidana@gmail.com
+                            -   column:
+                                    name: documento_identidad
+                                    value: '72554230'
+                            -   column:
+                                    name: telefono
+                                    value: '+51 917084202'
+                            -   column:
+                                    name: id_rol
+                                    valueNumeric: 1
+                            -   column:
+                                    name: salario_base
+                                    valueNumeric: 10000

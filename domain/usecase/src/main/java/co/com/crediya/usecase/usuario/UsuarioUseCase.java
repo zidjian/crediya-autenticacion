@@ -13,7 +13,7 @@ public class UsuarioUseCase {
     public Mono<Usuario> crearUsuario(Usuario usuario) {
         return usuarioRepository.existePorEmail(usuario.getEmail())
                 .flatMap(existe ->
-                        existe ? Mono.error(new UsuarioYaExisteException(usuario.getEmail()))
+                        Boolean.TRUE.equals(existe) ? Mono.error(new UsuarioYaExisteException(usuario.getEmail()))
                                 : usuarioRepository.crear(usuario)
                 );
     }

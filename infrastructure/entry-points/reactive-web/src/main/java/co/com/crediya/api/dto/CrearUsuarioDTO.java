@@ -1,9 +1,9 @@
 package co.com.crediya.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
 
-import java.math.BigDecimal;
-
+@JsonIgnoreProperties(ignoreUnknown = false)
 public record CrearUsuarioDTO(
         @NotBlank
         String nombre,
@@ -21,7 +21,9 @@ public record CrearUsuarioDTO(
         Long idRol,
 
         @NotNull
+        @Pattern(regexp = "^\\d+(\\.\\d{1,2})?$", message = "Solo números, hasta dos decimales")
         @Min(1)
-        BigDecimal salarioBase
+        @Max(value = 15000000, message = "El salario no puede ser mayor a 15.000.000")
+        String salarioBase
 ) {
 }

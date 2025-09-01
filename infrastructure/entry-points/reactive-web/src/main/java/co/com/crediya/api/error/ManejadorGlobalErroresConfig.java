@@ -3,6 +3,7 @@ package co.com.crediya.api.error;
 import co.com.crediya.usecase.usuario.exceptions.NegocioException;
 import co.com.crediya.usecase.usuario.exceptions.UsuarioYaExisteException;
 import co.com.crediya.usecase.usuario.exceptions.UsuarioNotFoundException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.WebProperties;
@@ -23,10 +24,10 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 import co.com.crediya.shared.error.ErrorDetail;
 import co.com.crediya.shared.error.ErrorResponse;
-
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,18 +57,16 @@ public class ManejadorGlobalErroresConfig {
         }
 
         @Override
-        protected RouterFunction<ServerResponse> getRoutingFunction(final ErrorAttributes errorAttributes) {
-            return RouterFunctions.route(
-                    RequestPredicates.all()
-                            .and(RequestPredicates.path("/webjars/**").negate()),
-                    this::renderErrorResponse
-            );
+        protected RouterFunction<ServerResponse> getRoutingFunction(ErrorAttributes errorAttributes) {
+            return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse);
         }
 
         private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
             Throwable ex = getError(request);
-
             String idCorrelacion = request.headers().firstHeader("X-Correlation-Id");
+            
+            // Extraer la causa raíz si está anidada
+            Throwable rootCause = getRootCause(ex);
 
             HttpStatus status;
             ErrorResponse payload;
@@ -76,7 +75,7 @@ public class ManejadorGlobalErroresConfig {
                 status = HttpStatus.CONFLICT;
                 payload = ErrorResponse.of(
                         uae.getCode(),
-                        "El usuario ya existe: " + uae.getEmail(),
+                        "El elemento ya existe: " + uae.getEmail(),
                         status.value(),
                         request.path(),
                         null,
@@ -85,7 +84,7 @@ public class ManejadorGlobalErroresConfig {
             } else if (ex instanceof UsuarioNotFoundException unfe) {
                 status = HttpStatus.NOT_FOUND;
                 payload = ErrorResponse.of(
-                        "USUARIO_NO_ENCONTRADO",
+                        "NO_ENCONTRADO",
                         unfe.getMessage(),
                         status.value(),
                         request.path(),
@@ -106,7 +105,7 @@ public class ManejadorGlobalErroresConfig {
                 status = HttpStatus.BAD_REQUEST;
                 List<ErrorDetail> detalles = cve.getConstraintViolations().stream()
                         .map(v -> new ErrorDetail(v.getPropertyPath().toString(), v.getMessage()))
-                        .collect(Collectors.toList());
+                        .toList();
                 payload = ErrorResponse.of(
                         "ERROR_VALIDACION",
                         "Datos de entrada inválidos",
@@ -120,6 +119,26 @@ public class ManejadorGlobalErroresConfig {
                 payload = ErrorResponse.of(
                         "ARGUMENTO_INVALIDO",
                         iae.getMessage(),
+                        status.value(),
+                        request.path(),
+                        null,
+                        idCorrelacion
+                );
+            } else if (rootCause instanceof UnrecognizedPropertyException upe) {
+                status = HttpStatus.BAD_REQUEST;
+                payload = ErrorResponse.of(
+                        "PROPIEDAD_DESCONOCIDA",
+                        "Se encontró una propiedad desconocida: " + upe.getPropertyName(),
+                        status.value(),
+                        request.path(),
+                        null,
+                        idCorrelacion
+                );
+            } else if (ex instanceof ServerWebInputException swe) {
+                status = HttpStatus.BAD_REQUEST;
+                payload = ErrorResponse.of(
+                        "ERROR_DE_ENTRADA",
+                        "Error en los datos de entrada de la solicitud",
                         status.value(),
                         request.path(),
                         null,
@@ -140,6 +159,17 @@ public class ManejadorGlobalErroresConfig {
             return ServerResponse.status(status)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(BodyInserters.fromValue(payload));
+        }
+
+        private Throwable getRootCause(Throwable throwable) {
+            Throwable rootCause = throwable;
+            while (rootCause.getCause() != null) {
+                rootCause = rootCause.getCause();
+                if (rootCause instanceof UnrecognizedPropertyException) {
+                    return rootCause;
+                }
+            }
+            return throwable;
         }
     }
 }

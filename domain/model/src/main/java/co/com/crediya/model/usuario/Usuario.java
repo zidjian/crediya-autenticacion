@@ -1,9 +1,10 @@
 package co.com.crediya.model.usuario;
 
-import lombok.Data;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 
+@Getter
 public class Usuario {
     private final Long idUsuario;
     private final String nombre;
@@ -30,43 +31,12 @@ public class Usuario {
         this.salarioBase = salarioBase;
     }
 
-    public static Usuario crear(String nombre, String apellido, String email, String documentoIdentidad, String telefono, Long idRol, BigDecimal salarioBase) {
-        return new Usuario(null, nombre, apellido, email, documentoIdentidad, telefono, idRol, salarioBase);
+    public static Usuario toUsuario(Long idUsuario,String nombre, String apellido, String email, String documentoIdentidad, String telefono, Long idRol, BigDecimal salarioBase) {
+        return new Usuario(idUsuario, nombre, apellido, email, documentoIdentidad, telefono, idRol, salarioBase);
     }
 
     public Usuario conId(Long idUsuario) {
         return new Usuario(idUsuario, nombre, apellido, email, documentoIdentidad, telefono, idRol, salarioBase);
     }
 
-    public Long getIdUsuario() {
-        return idUsuario;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getDocumentoIdentidad() {
-        return documentoIdentidad;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public Long getIdRol() {
-        return idRol;
-    }
-
-    public BigDecimal getSalarioBase() {
-        return salarioBase;
-    }
 }

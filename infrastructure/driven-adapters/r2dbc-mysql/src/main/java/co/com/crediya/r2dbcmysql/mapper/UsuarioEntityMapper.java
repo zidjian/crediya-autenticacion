@@ -26,7 +26,8 @@ public interface UsuarioEntityMapper {
         if (entity == null) {
             return null;
         }
-        Usuario creado = Usuario.crear(
+        Usuario creado = Usuario.toUsuario(
+                entity.getIdUsuario(),
                 entity.getNombre(),
                 entity.getApellido(),
                 entity.getEmail(),

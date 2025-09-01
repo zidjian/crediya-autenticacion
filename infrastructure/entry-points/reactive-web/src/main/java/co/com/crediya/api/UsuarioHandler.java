@@ -30,7 +30,6 @@ public class UsuarioHandler {
     public Mono<ServerResponse> escucharGuardarUsuario(ServerRequest serverRequest) {
         return serverRequest
                 .bodyToMono(CrearUsuarioDTO.class)
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("El cuerpo de la petición es requerido")))
                 .doOnSubscribe(sub -> log.info("[CREAR_USUARIO] Petición recibida"))
                 .flatMap(dto -> {
                     Set<ConstraintViolation<CrearUsuarioDTO>> violaciones = validator.validate(dto);
