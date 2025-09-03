@@ -45,4 +45,11 @@ public class UsuarioReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         return super.repository.findByDocumentoIdentidad(documentoIdentidad)
                 .map(usuarioEntityMapper::toDomain);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Mono<Usuario> buscarPorEmail(String email) {
+        return super.repository.findByEmail(email)
+                .map(usuarioEntityMapper::toDomain);
+    }
 }

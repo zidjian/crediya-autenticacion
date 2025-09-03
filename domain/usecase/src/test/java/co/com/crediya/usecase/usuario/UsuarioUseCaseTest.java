@@ -35,7 +35,8 @@ class UsuarioUseCaseTest {
                 "CC123",
                 "3000000000",
                 1L,
-                new BigDecimal("1000000")
+                new BigDecimal("1000000"),
+                "password123"
         );
     }
 
@@ -48,7 +49,6 @@ class UsuarioUseCaseTest {
         void debeEmitirExcepcionCuandoCorreoYaExiste() {
             // Arrange
             Usuario usuario = crearUsuarioEjemplo();
-            String emailEsperado = "juan.perez@example.com";
 
             when(usuarioRepository.existePorEmail(usuario.getEmail()))
                     .thenReturn(Mono.just(true));
@@ -60,8 +60,8 @@ class UsuarioUseCaseTest {
             StepVerifier.create(resultado)
                     .expectErrorSatisfies(error -> {
                         assert error instanceof AlreadyExistException;
-                        AlreadyExistException excepcion = (AlreadyExistException) error;
-                        assert excepcion.getEmail().equals(emailEsperado);
+                        AlreadyExistException alreadyExistException = (AlreadyExistException) error;
+                        assert alreadyExistException.getMessage().contains("Ya existe un usuario con el email: " + usuario.getEmail());
                     })
                     .verify();
         }
@@ -80,7 +80,8 @@ class UsuarioUseCaseTest {
                     usuario.getDocumentoIdentidad(),
                     usuario.getTelefono(),
                     usuario.getIdRol(),
-                    usuario.getSalarioBase()
+                    usuario.getSalarioBase(),
+                    usuario.getContrasenia()
             );
 
             when(usuarioRepository.existePorEmail(usuario.getEmail()))
@@ -188,7 +189,8 @@ class UsuarioUseCaseTest {
                     usuarioBase.getDocumentoIdentidad(),
                     usuarioBase.getTelefono(),
                     usuarioBase.getIdRol(),
-                    usuarioBase.getSalarioBase()
+                    usuarioBase.getSalarioBase(),
+                    usuarioBase.getContrasenia()
             );
 
             when(usuarioRepository.buscarPorDocumentoIdentidad(documentoIdentidad))
@@ -297,7 +299,8 @@ class UsuarioUseCaseTest {
                     usuarioBase.getDocumentoIdentidad(),
                     usuarioBase.getTelefono(),
                     usuarioBase.getIdRol(),
-                    usuarioBase.getSalarioBase()
+                    usuarioBase.getSalarioBase(),
+                    usuarioBase.getContrasenia()
             );
 
             when(usuarioRepository.buscarPorDocumentoIdentidad(documentoLimpio))

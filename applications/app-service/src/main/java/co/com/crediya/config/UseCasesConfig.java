@@ -2,6 +2,7 @@ package co.com.crediya.config;
 
 import co.com.crediya.model.usuario.gateways.RolRepository;
 import co.com.crediya.model.usuario.gateways.UsuarioRepository;
+import co.com.crediya.usecase.autenticacion.AutenticacionUseCase;
 import co.com.crediya.usecase.usuario.RolUseCase;
 import co.com.crediya.usecase.usuario.UsuarioUseCase;
 import org.springframework.context.annotation.Bean;
@@ -18,5 +19,10 @@ public class UseCasesConfig {
     @Bean
     public RolUseCase rolUseCase(RolRepository rolRepository) {
         return new RolUseCase(rolRepository);
+    }
+
+    @Bean
+    public AutenticacionUseCase autenticacionUseCase(UsuarioRepository usuarioRepository) {
+        return new AutenticacionUseCase(usuarioRepository);
     }
 }

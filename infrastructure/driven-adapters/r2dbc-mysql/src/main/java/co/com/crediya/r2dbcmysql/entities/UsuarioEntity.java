@@ -34,4 +34,6 @@ public class UsuarioEntity {
 
     @Column("salario_base")
     private BigDecimal salarioBase;
+
+    private String contrasenia;
 }

@@ -19,6 +19,7 @@ public class UsuarioTest {
     private static final String TELEFONO_VALIDO = "917084202";
     private static final Long ID_ROL_VALIDO = 1L;
     private static final BigDecimal SALARIO_VALIDO = BigDecimal.valueOf(1000);
+    private static final String CONTRASENIA_VALIDA = "password123";
 
     @Nested
     @DisplayName("Rompen las reglas de negocio")
@@ -32,8 +33,8 @@ public class UsuarioTest {
 
             // Act & Assert
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO,nombreNull, APELLIDO_VALIDO, EMAIL_VALIDO,
-                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO, nombreNull, APELLIDO_VALIDO, EMAIL_VALIDO,
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA));
 
             assertEquals("El nombre es obligatorio", exception.getMessage());
         }
@@ -47,7 +48,7 @@ public class UsuarioTest {
             // Act & Assert
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                     () -> Usuario.toUsuario(ID_USUARIO_VALIDO, nombreVacio, APELLIDO_VALIDO, EMAIL_VALIDO,
-                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA));
 
             assertEquals("El nombre es obligatorio", exception.getMessage());
         }
@@ -61,7 +62,7 @@ public class UsuarioTest {
             // Act & Assert
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                     () -> Usuario.toUsuario(ID_USUARIO_VALIDO, nombreEspacios, APELLIDO_VALIDO, EMAIL_VALIDO,
-                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA));
 
             assertEquals("El nombre es obligatorio", exception.getMessage());
         }
@@ -75,7 +76,7 @@ public class UsuarioTest {
             // Act & Assert
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                     () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoNull, EMAIL_VALIDO,
-                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA));
 
             assertEquals("El apellido es obligatorio", exception.getMessage());
         }
@@ -89,7 +90,7 @@ public class UsuarioTest {
             // Act & Assert
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                     () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoVacio, EMAIL_VALIDO,
-                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA));
 
             assertEquals("El apellido es obligatorio", exception.getMessage());
         }
@@ -103,7 +104,7 @@ public class UsuarioTest {
             // Act & Assert
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                     () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, emailNull,
-                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA));
 
             assertEquals("El email es obligatorio", exception.getMessage());
         }
@@ -117,7 +118,7 @@ public class UsuarioTest {
             // Act & Assert
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                     () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, emailEspacios,
-                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA));
 
             assertEquals("El email es obligatorio", exception.getMessage());
         }
@@ -131,7 +132,7 @@ public class UsuarioTest {
             // Act & Assert
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                     () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, salarioNull));
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, salarioNull, CONTRASENIA_VALIDA));
 
             assertEquals("El salarioBase es obligatorio", exception.getMessage());
         }
@@ -144,7 +145,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, telefonoNull, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, telefonoNull, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertNotNull(usuario);
@@ -159,7 +160,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, idRolNull, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, idRolNull, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertNotNull(usuario);
@@ -174,7 +175,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    documentoNull, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    documentoNull, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertNotNull(usuario);
@@ -194,7 +195,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, nombreConEspacios, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals("Juan", usuario.getNombre());
@@ -208,7 +209,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoConEspacios, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals("Perez", usuario.getApellido());
@@ -222,7 +223,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, emailConEspacios,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals("test@email.com", usuario.getEmail());
@@ -236,7 +237,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    documentoConEspacios, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    documentoConEspacios, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals("123456789", usuario.getDocumentoIdentidad());
@@ -250,7 +251,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, telefonoConEspacios, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, telefonoConEspacios, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals("917084202", usuario.getTelefono());
@@ -266,7 +267,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    documentoNull, telefonoNull, idRolNull, SALARIO_VALIDO);
+                    documentoNull, telefonoNull, idRolNull, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertNotNull(usuario);
@@ -287,7 +288,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    documentoConEspacios, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    documentoConEspacios, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals("123456789", usuario.getDocumentoIdentidad());
@@ -301,7 +302,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, telefonoConEspacios, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, telefonoConEspacios, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals("917084202", usuario.getTelefono());
@@ -316,7 +317,7 @@ public class UsuarioTest {
             // Act & Assert
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                     () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoEspacios, EMAIL_VALIDO,
-                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA));
 
             assertEquals("El apellido es obligatorio", exception.getMessage());
         }
@@ -330,7 +331,7 @@ public class UsuarioTest {
             // Act & Assert
             IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                     () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, emailVacio,
-                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO));
+                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA));
 
             assertEquals("El email es obligatorio", exception.getMessage());
         }
@@ -350,7 +351,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(idEsperado, nombreEsperado, apellidoEsperado, emailEsperado,
-                    documentoEsperado, telefonoEsperado, idRolEsperado, salarioEsperado);
+                    documentoEsperado, telefonoEsperado, idRolEsperado, salarioEsperado, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals(idEsperado, usuario.getIdUsuario());
@@ -376,7 +377,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, nombreEspecial, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals(nombreEspecial, usuario.getNombre());
@@ -390,7 +391,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoEspecial, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals(apellidoEspecial, usuario.getApellido());
@@ -404,7 +405,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, salarioDecimal);
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, salarioDecimal, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals(salarioDecimal, usuario.getSalarioBase());
@@ -418,7 +419,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, salarioCero);
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, salarioCero, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals(salarioCero, usuario.getSalarioBase());
@@ -430,7 +431,7 @@ public class UsuarioTest {
             // Arrange
             Long idGrande = Long.MAX_VALUE;
             Usuario usuario = Usuario.toUsuario(idGrande, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals(idGrande, usuario.getIdUsuario());
@@ -444,7 +445,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, emailLargo,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals(emailLargo, usuario.getEmail());
@@ -458,7 +459,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, nombreCorto, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals(nombreCorto, usuario.getNombre());
@@ -472,7 +473,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoCorto, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
+                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA);
 
             // Assert
             assertEquals(apellidoCorto, usuario.getApellido());

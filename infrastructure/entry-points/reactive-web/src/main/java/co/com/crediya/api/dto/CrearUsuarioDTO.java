@@ -24,6 +24,10 @@ public record CrearUsuarioDTO(
         @Pattern(regexp = "^\\d+(\\.\\d{1,2})?$", message = "Solo números, hasta dos decimales")
         @Min(1)
         @Max(value = 15000000, message = "El salario no puede ser mayor a 15.000.000")
-        String salarioBase
+        String salarioBase,
+
+        @NotBlank(message = "La contraseña es requerida")
+        @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
+        String contrasenia
 ) {
 }

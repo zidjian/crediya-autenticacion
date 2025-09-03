@@ -1,0 +1,19 @@
+# JWT Configuration
+jwt:
+  secret: mySecretKey123456789012345678901234567890123456789012345678901234567890
+  expiration: 24 # hours
+
+# Database Configuration
+spring:
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/crediya_auth
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
+  liquibase:
+    change-log: classpath:db/db.changelog-master.yaml
+
+# Logging
+logging:
+  level:
+    co.com.crediya: DEBUG
+    org.springframework.security: DEBUG

@@ -2,9 +2,14 @@ package co.com.crediya.api;
 
 import co.com.crediya.api.dto.BuscarPorDocumentoDTO;
 import co.com.crediya.api.dto.CrearUsuarioDTO;
+import co.com.crediya.api.dto.LoginDTO;
 import co.com.crediya.api.mapper.UsuarioDTOMapper;
+import co.com.crediya.api.security.JwtService;
+import co.com.crediya.api.security.PasswordService;
+import co.com.crediya.usecase.autenticacion.AutenticacionUseCase;
 import co.com.crediya.usecase.usuario.RolUseCase;
 import co.com.crediya.usecase.usuario.UsuarioUseCase;
+import co.com.crediya.usecase.usuario.exceptions.ValidationException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -25,8 +30,11 @@ import java.util.Set;
 public class UsuarioHandler {
     private final UsuarioUseCase usuarioUseCase;
     private final RolUseCase rolUseCase;
+    private final AutenticacionUseCase autenticacionUseCase;
     private final UsuarioDTOMapper mapper;
     private final Validator validator;
+    private final PasswordService passwordService;
+    private final JwtService jwtService;
 
     public Mono<ServerResponse> escucharGuardarUsuario(ServerRequest serverRequest) {
         return serverRequest
@@ -44,6 +52,20 @@ public class UsuarioHandler {
                         rolUseCase.findByIdRol(dto.idRol())
                                 .then(Mono.just(dto))
                 )
+                .map(dto -> {
+                    // Hash the password before creating the user
+                    String hashedPassword = passwordService.hashPassword(dto.contrasenia());
+                    return new CrearUsuarioDTO(
+                            dto.nombre(),
+                            dto.apellido(),
+                            dto.email(),
+                            dto.documentoIdentidad(),
+                            dto.telefono(),
+                            dto.idRol(),
+                            dto.salarioBase(),
+                            hashedPassword
+                    );
+                })
                 .map(mapper::toModel)
                 .flatMap(usuarioUseCase::crearUsuario)
                 .doOnSuccess(u -> log.info("[CREAR_USUARIO] Usuario persistido con id={}", u.getIdUsuario()))
@@ -64,7 +86,7 @@ public class UsuarioHandler {
                     Set<ConstraintViolation<BuscarPorDocumentoDTO>> violaciones = validator.validate(buscarDto);
                     if (!violaciones.isEmpty()) {
                         log.warn("[BUSCAR_USUARIO] Validación fallida: {} violación(es)", violaciones.size());
-                        return Mono.error(new ConstraintViolationException(violaciones));
+                        return Mono.error(new ConstraintViolationException("", violaciones));
                     }
                     return Mono.just(buscarDto.documentoIdentidad());
                 })
@@ -75,5 +97,48 @@ public class UsuarioHandler {
                         .bodyValue(mapper.toResponse(usuario))
                 )
                 .doOnError(ex -> log.error("[BUSCAR_USUARIO] Error buscando usuario por documento: {}", ex.toString()));
+    }
+
+    public Mono<ServerResponse> escucharLogin(ServerRequest serverRequest) {
+        return serverRequest
+                .bodyToMono(LoginDTO.class)
+                .doOnSubscribe(sub -> log.info("[LOGIN] Petición de login recibida"))
+                .flatMap(dto -> {
+                    Set<ConstraintViolation<LoginDTO>> violaciones = validator.validate(dto);
+                    if (!violaciones.isEmpty()) {
+                        log.warn("[LOGIN] Validación fallida: {} violación(es)", violaciones.size());
+                        return Mono.error(new ConstraintViolationException(violaciones));
+                    }
+                    return Mono.just(dto);
+                })
+                .flatMap(dto -> autenticacionUseCase.autenticarUsuario(dto.email(), dto.contrasenia())
+                        .flatMap(usuario -> {
+                            // Verify password
+                            if (passwordService.verifyPassword(dto.contrasenia(), usuario.getContrasenia())) {
+                                // Get role information before generating token
+                                return rolUseCase.findByIdRol(usuario.getIdRol())
+                                        .flatMap(rol -> {
+                                            // Generate JWT token with role name
+                                            String token = jwtService.generateToken(
+                                                    usuario.getIdUsuario(),
+                                                    usuario.getEmail(),
+                                                    usuario.getNombre(),
+                                                    usuario.getApellido(),
+                                                    rol.getNombre()
+                                            );
+                                            return Mono.just(mapper.toLoginResponse(usuario, token));
+                                        });
+                            } else {
+                                log.warn("[LOGIN] Contraseña incorrecta para email: {}", dto.email());
+                                return Mono.error(new ValidationException("Credenciales inválidas"));
+                            }
+                        })
+                )
+                .doOnSuccess(response -> log.info("[LOGIN] Login exitoso para usuario: {}", response.email()))
+                .flatMap(loginResponse -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(loginResponse)
+                )
+                .doOnError(ex -> log.error("[LOGIN] Error en login: {}", ex.toString()));
     }
 }

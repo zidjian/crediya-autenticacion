@@ -72,6 +72,9 @@ databaseChangeLog:
                                     name: documento_identidad
                                     value: '72554230'
                             -   column:
+                                    name: contrasenia
+                                    value: '$2a$12$5d7e.C6sVukUW0u12JO18etBlRg1k0SFyoMka1L3k0DjA20hKCMpC'
+                            -   column:
                                     name: telefono
                                     value: '+51 917084202'
                             -   column:

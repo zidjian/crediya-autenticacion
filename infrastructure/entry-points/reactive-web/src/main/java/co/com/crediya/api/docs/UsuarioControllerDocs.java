@@ -2,6 +2,8 @@ package co.com.crediya.api.docs;
 
 import co.com.crediya.api.UsuarioHandler;
 import co.com.crediya.api.dto.CrearUsuarioDTO;
+import co.com.crediya.api.dto.LoginDTO;
+import co.com.crediya.api.dto.RespuestaLoginDTO;
 import co.com.crediya.api.dto.RespuestaUsuarioDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -71,6 +73,29 @@ public interface UsuarioControllerDocs {
                                             content = @Content(schema = @Schema(implementation = RespuestaUsuarioDTO.class))),
                                     @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
                                     @ApiResponse(responseCode = "400", description = "Documento de identidad inválido")
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/v1/login",
+                    produces = MediaType.APPLICATION_JSON_VALUE,
+                    method = RequestMethod.POST,
+                    beanClass = UsuarioHandler.class,
+                    beanMethod = "escucharLogin",
+                    operation = @Operation(
+                            operationId = "login",
+                            summary = "Iniciar sesion",
+                            description = "Inicia sesión con las credenciales del usuario",
+                            tags = {"Login"},
+                            requestBody = @RequestBody(
+                                    required = true,
+                                    content = @Content(schema = @Schema(implementation = LoginDTO.class))
+                            ),
+                            responses = {
+                                    @ApiResponse(responseCode = "201", description = "Inicio de sesión exitoso",
+                                            content = @Content(schema = @Schema(implementation = RespuestaLoginDTO.class))),
+                                    @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+                                    @ApiResponse(responseCode = "409", description = "Usuario ya existe")
                             }
                     )
             )

@@ -11,8 +11,9 @@ public class Usuario {
     private final String telefono;
     private final Long idRol;
     private final BigDecimal salarioBase;
+    private final String contrasenia;
 
-    private Usuario(Long idUsuario, String nombre, String apellido, String email, String documentoIdentidad, String telefono, Long idRol, BigDecimal salarioBase) {
+    private Usuario(Long idUsuario, String nombre, String apellido, String email, String documentoIdentidad, String telefono, Long idRol, BigDecimal salarioBase, String contrasenia) {
         if (nombre == null || nombre.isBlank()) throw new IllegalArgumentException("El nombre es obligatorio");
         if (apellido == null || apellido.isBlank()) throw new IllegalArgumentException("El apellido es obligatorio");
         if (email == null || email.isBlank()) throw new IllegalArgumentException("El email es obligatorio");
@@ -26,10 +27,11 @@ public class Usuario {
         this.telefono = telefono == null ? null : telefono.trim();
         this.idRol = idRol;
         this.salarioBase = salarioBase;
+        this.contrasenia = contrasenia;
     }
 
-    public static Usuario toUsuario(Long idUsuario,String nombre, String apellido, String email, String documentoIdentidad, String telefono, Long idRol, BigDecimal salarioBase) {
-        return new Usuario(idUsuario, nombre, apellido, email, documentoIdentidad, telefono, idRol, salarioBase);
+    public static Usuario toUsuario(Long idUsuario, String nombre, String apellido, String email, String documentoIdentidad, String telefono, Long idRol, BigDecimal salarioBase, String contrasenia) {
+        return new Usuario(idUsuario, nombre, apellido, email, documentoIdentidad, telefono, idRol, salarioBase, contrasenia);
     }
 
     public Long getIdUsuario() {
@@ -62,5 +64,9 @@ public class Usuario {
 
     public BigDecimal getSalarioBase() {
         return salarioBase;
+    }
+
+    public String getContrasenia() {
+        return contrasenia;
     }
 }

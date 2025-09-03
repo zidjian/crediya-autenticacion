@@ -16,6 +16,7 @@ public class UsuarioRouterRest implements UsuarioControllerDocs {
     @Bean
     public RouterFunction<ServerResponse> routerFunction(UsuarioHandler handler) {
         return route(POST("/api/v1/usuarios"), handler::escucharGuardarUsuario)
-                .andRoute(GET("/api/v1/usuarios/documento/{documento}"), handler::escucharBuscarUsuarioPorDocumento);
+                .andRoute(GET("/api/v1/usuarios/documento/{documento}"), handler::escucharBuscarUsuarioPorDocumento)
+                .andRoute(POST("/api/v1/login"), handler::escucharLogin);
     }
 }

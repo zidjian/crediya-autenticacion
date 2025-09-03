@@ -11,6 +11,10 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.96.Final:osx-aarch_64'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+    implementation 'org.springframework.security:spring-security-crypto:6.1.5'
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly('org.springframework.boot:spring-boot-devtools')
     testImplementation 'com.tngtech.archunit:archunit:1.4.1'

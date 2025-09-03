@@ -65,6 +65,9 @@ databaseChangeLog:
                                     name: documento_identidad
                                     type: VARCHAR(50)
                             -   column:
+                                    name: contrasenia
+                                    type: VARCHAR(255)
+                            -   column:
                                     name: telefono
                                     type: VARCHAR(30)
                             -   column:

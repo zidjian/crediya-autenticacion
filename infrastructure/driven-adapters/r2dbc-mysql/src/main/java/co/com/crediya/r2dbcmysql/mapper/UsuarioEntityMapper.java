@@ -19,6 +19,7 @@ public interface UsuarioEntityMapper {
                 .telefono(domain.getTelefono())
                 .idRol(domain.getIdRol())
                 .salarioBase(domain.getSalarioBase())
+                .contrasenia(domain.getContrasenia())
                 .build();
     }
 
@@ -34,7 +35,8 @@ public interface UsuarioEntityMapper {
                 entity.getDocumentoIdentidad(),
                 entity.getTelefono(),
                 entity.getIdRol(),
-                entity.getSalarioBase()
+                entity.getSalarioBase(),
+                entity.getContrasenia()
         );
     }
 }
