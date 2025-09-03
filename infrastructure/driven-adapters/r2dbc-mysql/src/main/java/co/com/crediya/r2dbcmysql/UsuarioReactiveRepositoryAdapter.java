@@ -7,6 +7,7 @@ import co.com.crediya.r2dbcmysql.helper.ReactiveAdapterOperations;
 import co.com.crediya.r2dbcmysql.mapper.UsuarioEntityMapper;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 @Repository
@@ -25,6 +26,7 @@ public class UsuarioReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
     @Override
+    @Transactional
     public Mono<Usuario> crear(Usuario usuario) {
         UsuarioEntity entity = usuarioEntityMapper.toEntity(usuario);
         return super.repository.save(entity)
@@ -32,11 +34,13 @@ public class UsuarioReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Mono<Boolean> existePorEmail(String email) {
         return super.repository.existsByEmail( email);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Mono<Usuario> buscarPorDocumentoIdentidad(String documentoIdentidad) {
         return super.repository.findByDocumentoIdentidad(documentoIdentidad)
                 .map(usuarioEntityMapper::toDomain);

@@ -21,7 +21,7 @@ public class UsuarioTest {
     private static final BigDecimal SALARIO_VALIDO = BigDecimal.valueOf(1000);
 
     @Nested
-    @DisplayName("Invariantes de negocio")
+    @DisplayName("Rompen las reglas de negocio")
     class Invariants {
 
         @Test
@@ -257,62 +257,6 @@ public class UsuarioTest {
         }
 
         @Test
-        @DisplayName("Debe crear usuario sin ID inicialmente")
-        void shouldCreateUsuarioWithoutId() {
-            // Arrange
-            // Datos de usuario válidos ya definidos en constantes
-
-            // Act
-            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
-
-            // Assert
-            assertNotNull(usuario);
-            assertNull(usuario.getIdUsuario());
-        }
-
-        @Test
-        @DisplayName("Debe poder asignar ID usando conId")
-        void shouldAssignIdUsingConId() {
-            // Arrange
-            Long idEsperado = 42L;
-            Usuario usuarioSinId = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
-
-            // Act
-            Usuario usuarioConId = usuarioSinId.conId(idEsperado);
-
-            // Assert
-            assertNull(usuarioSinId.getIdUsuario());
-            assertEquals(idEsperado, usuarioConId.getIdUsuario());
-
-            // Verificar que los demás campos se mantienen
-            assertEquals(usuarioSinId.getNombre(), usuarioConId.getNombre());
-            assertEquals(usuarioSinId.getApellido(), usuarioConId.getApellido());
-            assertEquals(usuarioSinId.getEmail(), usuarioConId.getEmail());
-            assertEquals(usuarioSinId.getDocumentoIdentidad(), usuarioConId.getDocumentoIdentidad());
-            assertEquals(usuarioSinId.getTelefono(), usuarioConId.getTelefono());
-            assertEquals(usuarioSinId.getIdRol(), usuarioConId.getIdRol());
-            assertEquals(usuarioSinId.getSalarioBase(), usuarioConId.getSalarioBase());
-        }
-
-        @Test
-        @DisplayName("Debe mantener inmutabilidad")
-        void shouldMaintainImmutability() {
-            // Arrange
-            Usuario usuarioOriginal = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
-
-            // Act
-            Usuario usuarioConId = usuarioOriginal.conId(42L);
-
-            // Assert
-            assertNotEquals(usuarioOriginal, usuarioConId);
-            assertNull(usuarioOriginal.getIdUsuario());
-            assertEquals(42L, usuarioConId.getIdUsuario());
-        }
-
-        @Test
         @DisplayName("Debe crear usuario válido con todos los campos opcionales null")
         void shouldCreateValidUsuarioWithAllOptionalFieldsNull() {
             // Arrange
@@ -392,43 +336,6 @@ public class UsuarioTest {
         }
 
         @Test
-        @DisplayName("Debe preservar valores en conId")
-        void shouldPreserveValuesInConId() {
-            // Arrange
-            Usuario usuarioOriginal = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
-            Long nuevoId = 999L;
-
-            // Act
-            Usuario usuarioConId = usuarioOriginal.conId(nuevoId);
-
-            // Assert
-            assertEquals(nuevoId, usuarioConId.getIdUsuario());
-            assertEquals(usuarioOriginal.getNombre(), usuarioConId.getNombre());
-            assertEquals(usuarioOriginal.getApellido(), usuarioConId.getApellido());
-            assertEquals(usuarioOriginal.getEmail(), usuarioConId.getEmail());
-            assertEquals(usuarioOriginal.getDocumentoIdentidad(), usuarioConId.getDocumentoIdentidad());
-            assertEquals(usuarioOriginal.getTelefono(), usuarioConId.getTelefono());
-            assertEquals(usuarioOriginal.getIdRol(), usuarioConId.getIdRol());
-            assertEquals(usuarioOriginal.getSalarioBase(), usuarioConId.getSalarioBase());
-        }
-
-        @Test
-        @DisplayName("Debe permitir ID null en conId")
-        void shouldAllowNullIdInConId() {
-            // Arrange
-            Usuario usuarioOriginal = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
-                    DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
-            Long idNull = null;
-
-            // Act
-            Usuario usuarioConId = usuarioOriginal.conId(idNull);
-
-            // Assert
-            assertNull(usuarioConId.getIdUsuario());
-        }
-
-        @Test
         @DisplayName("Debe validar que getters devuelven valores correctos")
         void shouldValidateGettersReturnCorrectValues() {
             // Arrange
@@ -443,8 +350,7 @@ public class UsuarioTest {
 
             // Act
             Usuario usuario = Usuario.toUsuario(idEsperado, nombreEsperado, apellidoEsperado, emailEsperado,
-                    documentoEsperado, telefonoEsperado, idRolEsperado, salarioEsperado)
-                    .conId(idEsperado);
+                    documentoEsperado, telefonoEsperado, idRolEsperado, salarioEsperado);
 
             // Assert
             assertEquals(idEsperado, usuario.getIdUsuario());
@@ -523,14 +429,11 @@ public class UsuarioTest {
         void shouldHandleLargeIds() {
             // Arrange
             Long idGrande = Long.MAX_VALUE;
-            Usuario usuario = Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
+            Usuario usuario = Usuario.toUsuario(idGrande, NOMBRE_VALIDO, APELLIDO_VALIDO, EMAIL_VALIDO,
                     DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO);
 
-            // Act
-            Usuario usuarioConId = usuario.conId(idGrande);
-
             // Assert
-            assertEquals(idGrande, usuarioConId.getIdUsuario());
+            assertEquals(idGrande, usuario.getIdUsuario());
         }
 
         @Test

@@ -26,7 +26,7 @@ public interface UsuarioEntityMapper {
         if (entity == null) {
             return null;
         }
-        Usuario creado = Usuario.toUsuario(
+        return Usuario.toUsuario(
                 entity.getIdUsuario(),
                 entity.getNombre(),
                 entity.getApellido(),
@@ -36,6 +36,5 @@ public interface UsuarioEntityMapper {
                 entity.getIdRol(),
                 entity.getSalarioBase()
         );
-        return entity.getIdUsuario() == null ? creado.conId(null) : creado;
     }
 }

@@ -3,8 +3,8 @@ package co.com.crediya.api;
 import co.com.crediya.api.dto.BuscarPorDocumentoDTO;
 import co.com.crediya.api.dto.CrearUsuarioDTO;
 import co.com.crediya.api.mapper.UsuarioDTOMapper;
+import co.com.crediya.usecase.usuario.RolUseCase;
 import co.com.crediya.usecase.usuario.UsuarioUseCase;
-import co.com.crediya.usecase.usuario.exceptions.UsuarioNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -24,6 +24,7 @@ import java.util.Set;
 @Slf4j
 public class UsuarioHandler {
     private final UsuarioUseCase usuarioUseCase;
+    private final RolUseCase rolUseCase;
     private final UsuarioDTOMapper mapper;
     private final Validator validator;
 
@@ -39,6 +40,10 @@ public class UsuarioHandler {
                     }
                     return Mono.just(dto);
                 })
+                .flatMap(dto ->
+                        rolUseCase.findByIdRol(dto.idRol())
+                                .then(Mono.just(dto))
+                )
                 .map(mapper::toModel)
                 .flatMap(usuarioUseCase::crearUsuario)
                 .doOnSuccess(u -> log.info("[CREAR_USUARIO] Usuario persistido con id={}", u.getIdUsuario()))
@@ -64,17 +69,10 @@ public class UsuarioHandler {
                     return Mono.just(buscarDto.documentoIdentidad());
                 })
                 .flatMap(usuarioUseCase::buscarUsuarioPorDocumentoIdentidad)
-                .flatMap(usuario -> {
-                    log.info("[BUSCAR_USUARIO] Usuario encontrado con id={}", usuario.getIdUsuario());
-                    return ServerResponse.ok()
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .bodyValue(mapper.toResponse(usuario));
-                })
-                .switchIfEmpty(
-                    Mono.defer(() -> {
-                        log.info("[BUSCAR_USUARIO] Usuario no encontrado para documento: {}", documentoIdentidad);
-                        return Mono.error(new UsuarioNotFoundException("No existe un usuario con el documento de identidad proporcionado: " + documentoIdentidad));
-                    })
+                .doOnSuccess(usuario -> log.info("[BUSCAR_USUARIO] Usuario encontrado con id={}", usuario.getIdUsuario()))
+                .flatMap(usuario -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(mapper.toResponse(usuario))
                 )
                 .doOnError(ex -> log.error("[BUSCAR_USUARIO] Error buscando usuario por documento: {}", ex.toString()));
     }

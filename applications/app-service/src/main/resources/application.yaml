@@ -7,6 +7,14 @@ spring:
         name: "Autenticacion"
     devtools:
         add-properties: false
+    jackson:
+        serialization:
+            write-dates-as-timestamps: false
+        deserialization:
+            adjust-dates-to-context-time-zone: false
+        time-zone: UTC
+        modules:
+            - com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 
 logging:
     level:

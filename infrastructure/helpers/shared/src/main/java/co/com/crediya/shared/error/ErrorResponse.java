@@ -57,3 +57,4 @@ public class ErrorResponse {
         return new ErrorResponse(codigo, mensaje, estado, ruta, Instant.now(), idCorrelacion, detalles);
     }
 }
+
