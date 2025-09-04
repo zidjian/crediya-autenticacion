@@ -116,3 +116,4 @@ public class GlobalErrorHandler extends AbstractErrorWebExceptionHandler {
         return "unknown";
     }
 }
+

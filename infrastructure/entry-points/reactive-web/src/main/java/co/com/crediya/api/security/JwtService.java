@@ -27,7 +27,7 @@ public class JwtService {
         this.expirationTimeInHours = expirationTimeInHours;
     }
 
-    public String generateToken(Long userId, String email, String nombre, String apellido, String rolNombre) {
+    public String generateToken(Long userId, String email, String nombre, String apellido, String documento, String rolNombre) {
         Instant now = Instant.now();
         Instant expiration = now.plus(expirationTimeInHours, ChronoUnit.HOURS);
 
@@ -36,6 +36,7 @@ public class JwtService {
                 .claim("userId", userId)
                 .claim("nombre", nombre)
                 .claim("apellido", apellido)
+                .claim("documentoIdentidad", documento)
                 .claim("rol", rolNombre)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiration))

@@ -1,60 +1,43 @@
 package co.com.crediya.shared.error;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
-    private final String codigo;
-    private final String mensaje;
-    private final int estado;
-    private final String ruta;
-    private final Instant fechaHora;
-    private final String idCorrelacion;
-    private final List<ErrorDetail> detalles;
+    private String codigo;
+    private String mensaje;
+    private int status;
+    private String path;
+    private List<ErrorDetail> detalles;
+    private String traceId;
 
-    public ErrorResponse(String codigo, String mensaje, int estado, String ruta, Instant fechaHora, String idCorrelacion, List<ErrorDetail> detalles) {
-        this.codigo = codigo;
-        this.mensaje = mensaje;
-        this.estado = estado;
-        this.ruta = ruta;
-        this.fechaHora = fechaHora;
-        this.idCorrelacion = idCorrelacion;
-        this.detalles = detalles;
-    }
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @Builder.Default
+    private LocalDateTime timestamp = LocalDateTime.now();
 
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public String getMensaje() {
-        return mensaje;
-    }
-
-    public int getEstado() {
-        return estado;
-    }
-
-    public String getRuta() {
-        return ruta;
-    }
-
-    public Instant getFechaHora() {
-        return fechaHora;
-    }
-
-    public String getIdCorrelacion() {
-        return idCorrelacion;
-    }
-
-    public List<ErrorDetail> getDetalles() {
-        return detalles;
-    }
-
-    public static ErrorResponse of(String codigo, String mensaje, int estado, String ruta, List<ErrorDetail> detalles, String idCorrelacion) {
-        return new ErrorResponse(codigo, mensaje, estado, ruta, Instant.now(), idCorrelacion, detalles);
+    // Método estático para mantener compatibilidad con tu GlobalErrorHandler
+    public static ErrorResponse of(String codigo, String mensaje, int status, String path,
+                                 List<ErrorDetail> detalles, String traceId) {
+        return ErrorResponse.builder()
+                .codigo(codigo)
+                .mensaje(mensaje)
+                .status(status)
+                .path(path)
+                .detalles(detalles)
+                .traceId(traceId)
+                .build();
     }
 }
-

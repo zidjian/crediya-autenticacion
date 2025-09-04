@@ -34,3 +34,16 @@ management:
         health:
             probes:
                 enabled: true
+
+jwt:
+    secret: mySecretKey123456789012345678901234567890123456789012345678901234567890
+    expiration: 24 # hours
+
+springdoc:
+    api-docs:
+        enabled: true
+        path: /v3/api-docs
+    swagger-ui:
+        enabled: true
+    webflux:
+        use-root-path: true

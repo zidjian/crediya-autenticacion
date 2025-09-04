@@ -18,6 +18,9 @@ public record CrearUsuarioDTO(
         @Pattern(regexp = "^[0-9-]+$", message = "El documento de identidad solo puede contener números y guiones")
         String documentoIdentidad,
         String telefono,
+
+        @NotNull
+        @Min(1)
         Long idRol,
 
         @NotNull

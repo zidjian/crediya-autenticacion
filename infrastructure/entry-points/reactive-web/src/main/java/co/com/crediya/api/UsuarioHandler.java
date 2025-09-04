@@ -124,6 +124,7 @@ public class UsuarioHandler {
                                                     usuario.getEmail(),
                                                     usuario.getNombre(),
                                                     usuario.getApellido(),
+                                                    usuario.getDocumentoIdentidad(),
                                                     rol.getNombre()
                                             );
                                             return Mono.just(mapper.toLoginResponse(usuario, token));
