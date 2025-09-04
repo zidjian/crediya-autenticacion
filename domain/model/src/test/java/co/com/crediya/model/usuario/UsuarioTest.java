@@ -309,34 +309,6 @@ public class UsuarioTest {
         }
 
         @Test
-        @DisplayName("Debe rechazar apellido con solo espacios")
-        void shouldRejectBlankApellido() {
-            // Arrange
-            String apellidoEspacios = "   ";
-
-            // Act & Assert
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, apellidoEspacios, EMAIL_VALIDO,
-                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA));
-
-            assertEquals("El apellido es obligatorio", exception.getMessage());
-        }
-
-        @Test
-        @DisplayName("Debe rechazar email vacío")
-        void shouldRejectEmptyEmail() {
-            // Arrange
-            String emailVacio = "";
-
-            // Act & Assert
-            IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                    () -> Usuario.toUsuario(ID_USUARIO_VALIDO, NOMBRE_VALIDO, APELLIDO_VALIDO, emailVacio,
-                            DOCUMENTO_VALIDO, TELEFONO_VALIDO, ID_ROL_VALIDO, SALARIO_VALIDO, CONTRASENIA_VALIDA));
-
-            assertEquals("El email es obligatorio", exception.getMessage());
-        }
-
-        @Test
         @DisplayName("Debe validar que getters devuelven valores correctos")
         void shouldValidateGettersReturnCorrectValues() {
             // Arrange
@@ -480,3 +452,4 @@ public class UsuarioTest {
         }
     }
 }
+

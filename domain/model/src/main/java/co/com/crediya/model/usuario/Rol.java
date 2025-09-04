@@ -10,7 +10,7 @@ public class Rol {
 
         this.idRol = idRol;
         this.nombre = nombre.trim();
-        this.descripcion = descripcion.trim();
+        this.descripcion = descripcion == null ? null : descripcion.trim();
     }
 
     public static Rol toRol(Long idRol, String nombre, String descripcion) {
