@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
@@ -35,6 +36,7 @@ public interface UsuarioControllerDocs {
                             summary = "Crear usuario",
                             description = "Crea un nuevo usuario",
                             tags = {"Usuarios"},
+                            security = @SecurityRequirement(name = "bearerAuth"),
                             requestBody = @RequestBody(
                                     required = true,
                                     content = @Content(schema = @Schema(implementation = CrearUsuarioDTO.class))
@@ -43,6 +45,8 @@ public interface UsuarioControllerDocs {
                                     @ApiResponse(responseCode = "201", description = "Usuario creado",
                                             content = @Content(schema = @Schema(implementation = RespuestaUsuarioDTO.class))),
                                     @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
+                                    @ApiResponse(responseCode = "401", description = "Token inválido o expirado"),
+                                    @ApiResponse(responseCode = "403", description = "Sin permisos suficientes"),
                                     @ApiResponse(responseCode = "409", description = "Usuario ya existe")
                             }
                     )
@@ -58,6 +62,7 @@ public interface UsuarioControllerDocs {
                             summary = "Buscar usuario por documento de identidad",
                             description = "Busca un usuario por su documento de identidad. Retorna el usuario completo si existe, o un error 404 si no se encuentra",
                             tags = {"Usuarios"},
+                            security = @SecurityRequirement(name = "bearerAuth"),
                             parameters = {
                                     @Parameter(
                                             name = "documento",
@@ -71,6 +76,7 @@ public interface UsuarioControllerDocs {
                             responses = {
                                     @ApiResponse(responseCode = "200", description = "Usuario encontrado",
                                             content = @Content(schema = @Schema(implementation = RespuestaUsuarioDTO.class))),
+                                    @ApiResponse(responseCode = "401", description = "Token inválido o expirado"),
                                     @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
                                     @ApiResponse(responseCode = "400", description = "Documento de identidad inválido")
                             }
@@ -95,7 +101,7 @@ public interface UsuarioControllerDocs {
                                     @ApiResponse(responseCode = "201", description = "Inicio de sesión exitoso",
                                             content = @Content(schema = @Schema(implementation = RespuestaLoginDTO.class))),
                                     @ApiResponse(responseCode = "400", description = "Solicitud inválida"),
-                                    @ApiResponse(responseCode = "409", description = "Usuario ya existe")
+                                    @ApiResponse(responseCode = "401", description = "Credenciales inválidas")
                             }
                     )
             )

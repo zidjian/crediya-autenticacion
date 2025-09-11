@@ -69,6 +69,10 @@ public class JwtService {
         return validateToken(token).get("rol", String.class);
     }
 
+    public String getDocumentoIdentidadFromToken(String token) {
+        return validateToken(token).get("documentoIdentidad", String.class);
+    }
+
     public boolean isTokenExpired(String token) {
         try {
             return validateToken(token).getExpiration().before(new Date());

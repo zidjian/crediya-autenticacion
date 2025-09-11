@@ -9,7 +9,7 @@ public record RespuestaUsuarioDTO(
         String email,
         String documentoIdentidad,
         String telefono,
-        Long idRol,
+        String rol,
         BigDecimal salarioBase
 )  {
 }

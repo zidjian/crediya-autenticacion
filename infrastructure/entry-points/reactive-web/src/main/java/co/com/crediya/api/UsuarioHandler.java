@@ -69,9 +69,12 @@ public class UsuarioHandler {
                 .map(mapper::toModel)
                 .flatMap(usuarioUseCase::crearUsuario)
                 .doOnSuccess(u -> log.info("[CREAR_USUARIO] Usuario persistido con id={}", u.getIdUsuario()))
-                .flatMap(usuarioGuardado -> ServerResponse.status(HttpStatus.CREATED)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(mapper.toResponse(usuarioGuardado))
+                .flatMap(usuarioGuardado ->
+                        rolUseCase.findByIdRol(usuarioGuardado.getIdRol())
+                                .flatMap(rol -> ServerResponse.status(HttpStatus.CREATED)
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .bodyValue(mapper.toResponse(usuarioGuardado, rol))
+                                )
                 )
                 .doOnError(ex -> log.error("[CREAR_USUARIO] Error creando usuario: {}", ex.toString()));
     }
@@ -92,9 +95,12 @@ public class UsuarioHandler {
                 })
                 .flatMap(usuarioUseCase::buscarUsuarioPorDocumentoIdentidad)
                 .doOnSuccess(usuario -> log.info("[BUSCAR_USUARIO] Usuario encontrado con id={}", usuario.getIdUsuario()))
-                .flatMap(usuario -> ServerResponse.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(mapper.toResponse(usuario))
+                .flatMap(usuario ->
+                    rolUseCase.findByIdRol(usuario.getIdRol())
+                            .flatMap(rol -> ServerResponse.ok()
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .bodyValue(mapper.toResponse(usuario, rol))
+                            )
                 )
                 .doOnError(ex -> log.error("[BUSCAR_USUARIO] Error buscando usuario por documento: {}", ex.toString()));
     }

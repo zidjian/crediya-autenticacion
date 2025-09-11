@@ -3,6 +3,7 @@ package co.com.crediya.api.mapper;
 import co.com.crediya.api.dto.CrearUsuarioDTO;
 import co.com.crediya.api.dto.RespuestaLoginDTO;
 import co.com.crediya.api.dto.RespuestaUsuarioDTO;
+import co.com.crediya.model.usuario.Rol;
 import co.com.crediya.model.usuario.Usuario;
 import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
@@ -25,7 +26,19 @@ public interface UsuarioDTOMapper {
         );
     }
 
-    RespuestaUsuarioDTO toResponse(Usuario usuario);
+    default RespuestaUsuarioDTO toResponse(Usuario usuario, Rol rol) {
+        if (usuario == null || rol == null) return null;
+        return new RespuestaUsuarioDTO(
+                usuario.getIdUsuario(),
+                usuario.getNombre(),
+                usuario.getApellido(),
+                usuario.getEmail(),
+                usuario.getDocumentoIdentidad(),
+                usuario.getTelefono(),
+                rol.getNombre(),
+                usuario.getSalarioBase()
+        );
+    }
 
     default RespuestaLoginDTO toLoginResponse(Usuario usuario, String token) {
         if (usuario == null) return null;
