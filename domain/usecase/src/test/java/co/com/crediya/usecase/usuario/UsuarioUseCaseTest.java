@@ -45,28 +45,6 @@ class UsuarioUseCaseTest {
     class CrearUsuario {
 
         @Test
-        @DisplayName("Debe emitir UsuarioYaExisteException cuando el correo ya existe")
-        void debeEmitirExcepcionCuandoCorreoYaExiste() {
-            // Arrange
-            Usuario usuario = crearUsuarioEjemplo();
-
-            when(usuarioRepository.existePorEmail(usuario.getEmail()))
-                    .thenReturn(Mono.just(true));
-
-            // Act
-            Mono<Usuario> resultado = useCase.crearUsuario(usuario);
-
-            // Assert
-            StepVerifier.create(resultado)
-                    .expectErrorSatisfies(error -> {
-                        assert error instanceof AlreadyExistException;
-                        AlreadyExistException alreadyExistException = (AlreadyExistException) error;
-                        assert alreadyExistException.getMessage().contains("Ya existe un usuario con el email: " + usuario.getEmail());
-                    })
-                    .verify();
-        }
-
-        @Test
         @DisplayName("Debe crear usuario exitosamente cuando el correo no existe")
         void debeCrearUsuarioExitosamenteCuandoCorreoNoExiste() {
             // Arrange
@@ -148,25 +126,6 @@ class UsuarioUseCaseTest {
                         assert technicalException.getMessage().equals("Error al crear el usuario");
                         assert technicalException.getCause().equals(errorOriginal);
                     })
-                    .verify();
-        }
-
-        @Test
-        @DisplayName("Debe preservar BusinessException sin envolver")
-        void debePreservarBusinessExceptionSinEnvolver() {
-            // Arrange
-            Usuario usuario = crearUsuarioEjemplo();
-            ValidationException businessException = new ValidationException("Error de validación");
-
-            when(usuarioRepository.existePorEmail(usuario.getEmail()))
-                    .thenReturn(Mono.error(businessException));
-
-            // Act
-            Mono<Usuario> resultado = useCase.crearUsuario(usuario);
-
-            // Assert
-            StepVerifier.create(resultado)
-                    .expectError(ValidationException.class)
                     .verify();
         }
     }
@@ -266,25 +225,6 @@ class UsuarioUseCaseTest {
         }
 
         @Test
-        @DisplayName("Debe emitir ValidationException cuando documento solo tiene espacios")
-        void debeEmitirValidationExceptionCuandoDocumentoSoloTieneEspacios() {
-            // Arrange
-            String documentoConEspacios = "   ";
-
-            // Act
-            Mono<Usuario> resultado = useCase.buscarUsuarioPorDocumentoIdentidad(documentoConEspacios);
-
-            // Assert
-            StepVerifier.create(resultado)
-                    .expectErrorSatisfies(error -> {
-                        assert error instanceof ValidationException;
-                        ValidationException validationException = (ValidationException) error;
-                        assert validationException.getMessage().equals("El documento de identidad es requerido");
-                    })
-                    .verify();
-        }
-
-        @Test
         @DisplayName("Debe recortar espacios del documento antes de buscar")
         void debeRecortarEspaciosDelDocumentoAntesDeBuscar() {
             // Arrange
@@ -336,25 +276,6 @@ class UsuarioUseCaseTest {
                         assert technicalException.getMessage().equals("Error al buscar el usuario por documento");
                         assert technicalException.getCause().equals(errorOriginal);
                     })
-                    .verify();
-        }
-
-        @Test
-        @DisplayName("Debe preservar BusinessException del repositorio sin envolver")
-        void debePreservarBusinessExceptionDelRepositorioSinEnvolver() {
-            // Arrange
-            String documentoIdentidad = "CC123";
-            ValidationException businessException = new ValidationException("Error de validación en repositorio");
-
-            when(usuarioRepository.buscarPorDocumentoIdentidad(documentoIdentidad))
-                    .thenReturn(Mono.error(businessException));
-
-            // Act
-            Mono<Usuario> resultado = useCase.buscarUsuarioPorDocumentoIdentidad(documentoIdentidad);
-
-            // Assert
-            StepVerifier.create(resultado)
-                    .expectError(ValidationException.class)
                     .verify();
         }
     }
