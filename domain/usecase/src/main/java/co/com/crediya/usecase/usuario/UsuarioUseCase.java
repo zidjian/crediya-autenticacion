@@ -27,20 +27,20 @@ public class UsuarioUseCase {
                 });
     }
 
-    public Mono<Usuario> buscarUsuarioPorDocumentoIdentidad(String documentoIdentidad) {
-        if (documentoIdentidad == null || documentoIdentidad.trim().isEmpty()) {
-            return Mono.error(new ValidationException("El documento de identidad es requerido"));
+    public Mono<Usuario> buscarUsuarioPorId(Long idUsuario) {
+        if (idUsuario == null || idUsuario <= 0) {
+            return Mono.error(new ValidationException("El ID de usuario es requerido y debe ser mayor a 0"));
         }
 
-        return usuarioRepository.buscarPorDocumentoIdentidad(documentoIdentidad.trim())
-                .switchIfEmpty(Mono.error(new NotFoundException("No existe un usuario con el documento de identidad proporcionado: " + documentoIdentidad)))
+        return usuarioRepository.buscarPorIdUsuario(idUsuario)
+                .switchIfEmpty(Mono.error(new NotFoundException("No existe un usuario con el ID proporcionado: " + idUsuario)))
                 .onErrorMap(throwable -> {
                     // Si ya es una BusinessException, la dejamos pasar
                     if (throwable instanceof co.com.crediya.usecase.usuario.exceptions.BusinessException) {
                         return throwable;
                     }
                     // Para cualquier otro error, lo envolvemos en una TechnicalException
-                    return new TechnicalException("Error al buscar el usuario por documento", throwable);
+                    return new TechnicalException("Error al buscar el usuario por ID", throwable);
                 });
     }
 }

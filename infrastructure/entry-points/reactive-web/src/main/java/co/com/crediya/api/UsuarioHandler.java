@@ -1,6 +1,6 @@
 package co.com.crediya.api;
 
-import co.com.crediya.api.dto.BuscarPorDocumentoDTO;
+import co.com.crediya.api.dto.BuscarPorIdDTO;
 import co.com.crediya.api.dto.CrearUsuarioDTO;
 import co.com.crediya.api.dto.LoginDTO;
 import co.com.crediya.api.mapper.UsuarioDTOMapper;
@@ -79,30 +79,37 @@ public class UsuarioHandler {
                 .doOnError(ex -> log.error("[CREAR_USUARIO] Error creando usuario: {}", ex.toString()));
     }
 
-    public Mono<ServerResponse> escucharBuscarUsuarioPorDocumento(ServerRequest serverRequest) {
-        String documentoIdentidad = serverRequest.pathVariable("documento");
-        BuscarPorDocumentoDTO dto = new BuscarPorDocumentoDTO(documentoIdentidad);
+    public Mono<ServerResponse> escucharBuscarUsuarioPorId(ServerRequest serverRequest) {
+        String idParam = serverRequest.pathVariable("id");
+        Long idUsuario;
+        try {
+            idUsuario = Long.parseLong(idParam);
+        } catch (NumberFormatException e) {
+            return Mono.error(new ValidationException("El ID debe ser un número válido"));
+        }
+
+        BuscarPorIdDTO dto = new BuscarPorIdDTO(idUsuario);
 
         return Mono.just(dto)
-                .doOnSubscribe(sub -> log.info("[BUSCAR_USUARIO] Petición recibida para documento: {}", documentoIdentidad))
+                .doOnSubscribe(sub -> log.info("[BUSCAR_USUARIO] Petición recibida para ID: {}", idUsuario))
                 .flatMap(buscarDto -> {
-                    Set<ConstraintViolation<BuscarPorDocumentoDTO>> violaciones = validator.validate(buscarDto);
+                    Set<ConstraintViolation<BuscarPorIdDTO>> violaciones = validator.validate(buscarDto);
                     if (!violaciones.isEmpty()) {
                         log.warn("[BUSCAR_USUARIO] Validación fallida: {} violación(es)", violaciones.size());
                         return Mono.error(new ConstraintViolationException("", violaciones));
                     }
-                    return Mono.just(buscarDto.documentoIdentidad());
+                    return Mono.just(buscarDto.idUsuario());
                 })
-                .flatMap(usuarioUseCase::buscarUsuarioPorDocumentoIdentidad)
+                .flatMap(usuarioUseCase::buscarUsuarioPorId)
                 .doOnSuccess(usuario -> log.info("[BUSCAR_USUARIO] Usuario encontrado con id={}", usuario.getIdUsuario()))
                 .flatMap(usuario ->
-                    rolUseCase.findByIdRol(usuario.getIdRol())
-                            .flatMap(rol -> ServerResponse.ok()
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .bodyValue(mapper.toResponse(usuario, rol))
-                            )
+                        rolUseCase.findByIdRol(usuario.getIdRol())
+                                .flatMap(rol -> ServerResponse.ok()
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .bodyValue(mapper.toResponse(usuario, rol))
+                                )
                 )
-                .doOnError(ex -> log.error("[BUSCAR_USUARIO] Error buscando usuario por documento: {}", ex.toString()));
+                .doOnError(ex -> log.error("[BUSCAR_USUARIO] Error buscando usuario por ID: {}", ex.toString()));
     }
 
     public Mono<ServerResponse> escucharLogin(ServerRequest serverRequest) {

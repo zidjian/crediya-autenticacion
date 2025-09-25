@@ -20,5 +20,5 @@ public record EditarUsuarioDTO(
 
         @Min(1)
         BigDecimal salarioBase
-){
+) {
 }

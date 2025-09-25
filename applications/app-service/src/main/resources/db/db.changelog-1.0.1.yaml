@@ -5,8 +5,8 @@ databaseChangeLog:
             preConditions:
                 -   not:
                         -   sqlCheck:
-                                expectedResult: 3
-                                sql: SELECT COUNT(*) FROM rol WHERE id_rol IN (1,2,3)
+                                expectedResult: 4
+                                sql: SELECT COUNT(*) FROM rol WHERE id_rol IN (1,2,3,4)
             changes:
                 -   insert:
                         tableName: rol
@@ -44,6 +44,18 @@ databaseChangeLog:
                             -   column:
                                     name: descripcion
                                     value: Rol con privilegios de cliente
+                -   insert:
+                        tableName: rol
+                        columns:
+                            -   column:
+                                    name: id_rol
+                                    valueNumeric: 4
+                            -   column:
+                                    name: nombre
+                                    value: servicios
+                            -   column:
+                                    name: descripcion
+                                    value: Rol con privilegios de servicios para el acceso de las lambdas
     -   changeSet:
             id: Insercion de datos semilla en la tabla usuarios
             author: Waldir Maidana
@@ -83,3 +95,123 @@ databaseChangeLog:
                             -   column:
                                     name: salario_base
                                     valueNumeric: 10000
+                -   insert:
+                        tableName: usuario
+                        columns:
+                            -   column:
+                                    name: id_usuario
+                                    valueNumeric: 2
+                            -   column:
+                                    name: nombre
+                                    value: Orlando
+                            -   column:
+                                    name: apellido
+                                    value: Maidana
+                            -   column:
+                                    name: email
+                                    value: orlandomaidana@gmail.com
+                            -   column:
+                                    name: documento_identidad
+                                    value: '72554229'
+                            -   column:
+                                    name: contrasenia
+                                    value: '$2a$12$5d7e.C6sVukUW0u12JO18etBlRg1k0SFyoMka1L3k0DjA20hKCMpC'
+                            -   column:
+                                    name: telefono
+                                    value: '+51 917084202'
+                            -   column:
+                                    name: id_rol
+                                    valueNumeric: 2
+                            -   column:
+                                    name: salario_base
+                                    valueNumeric: 10000
+                -   insert:
+                        tableName: usuario
+                        columns:
+                            -   column:
+                                    name: id_usuario
+                                    valueNumeric: 3
+                            -   column:
+                                    name: nombre
+                                    value: Wendy
+                            -   column:
+                                    name: apellido
+                                    value: Maidana
+                            -   column:
+                                    name: email
+                                    value: wendymaidana@gmail.com
+                            -   column:
+                                    name: documento_identidad
+                                    value: '72554228'
+                            -   column:
+                                    name: contrasenia
+                                    value: '$2a$12$5d7e.C6sVukUW0u12JO18etBlRg1k0SFyoMka1L3k0DjA20hKCMpC'
+                            -   column:
+                                    name: telefono
+                                    value: '+51 934235354'
+                            -   column:
+                                    name: id_rol
+                                    valueNumeric: 3
+                            -   column:
+                                    name: salario_base
+                                    valueNumeric: 10000
+                -   insert:
+                        tableName: usuario
+                        columns:
+                            -   column:
+                                    name: id_usuario
+                                    valueNumeric: 4
+                            -   column:
+                                    name: nombre
+                                    value: Vianey
+                            -   column:
+                                    name: apellido
+                                    value: Maidana
+                            -   column:
+                                    name: email
+                                    value: vianeymaidana@gmail.com
+                            -   column:
+                                    name: documento_identidad
+                                    value: '72554231'
+                            -   column:
+                                    name: contrasenia
+                                    value: '$2a$12$5d7e.C6sVukUW0u12JO18etBlRg1k0SFyoMka1L3k0DjA20hKCMpC'
+                            -   column:
+                                    name: telefono
+                                    value: '+51 943544354'
+                            -   column:
+                                    name: id_rol
+                                    valueNumeric: 3
+                            -   column:
+                                    name: salario_base
+                                    valueNumeric: 15000
+                -   insert:
+                        tableName: usuario
+                        columns:
+                            -   column:
+                                    name: id_usuario
+                                    valueNumeric: 5
+                            -   column:
+                                    name: nombre
+                                    value: Lambda
+                            -   column:
+                                    name: apellido
+                                    value: Servicios
+                            -   column:
+                                    name: email
+                                    value: lambdaservicios@gmail.com
+                            -   column:
+                                    name: documento_identidad
+                                    value: '00000001'
+                            -   column:
+                                    name: contrasenia
+                                    value: '$2a$12$5d7e.C6sVukUW0u12JO18etBlRg1k0SFyoMka1L3k0DjA20hKCMpC'
+                            -   column:
+                                    name: telefono
+                                    value: '+51 934235354'
+                            -   column:
+                                    name: id_rol
+                                    valueNumeric: 4
+                            -   column:
+                                    name: salario_base
+                                    valueNumeric: 0

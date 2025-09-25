@@ -11,5 +11,5 @@ public record RespuestaUsuarioDTO(
         String telefono,
         String rol,
         BigDecimal salarioBase
-)  {
+) {
 }

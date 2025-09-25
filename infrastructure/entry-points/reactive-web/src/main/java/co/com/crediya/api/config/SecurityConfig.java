@@ -51,7 +51,7 @@ public class SecurityConfig {
                         .pathMatchers("/webjars/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs.yaml", "/swagger-resources/**").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/login").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/v1/usuarios").hasAnyRole("administrador", "asesor")
-                        .pathMatchers(HttpMethod.GET, "/api/v1/usuarios/documento/{documento}").authenticated()
+                        .pathMatchers(HttpMethod.GET, "/api/v1/usuarios/{id}").hasAnyRole("servicios", "administrador", "asesor", "cliente")
                         .anyExchange().authenticated()
                 )
                 .build();
@@ -64,12 +64,12 @@ public class SecurityConfig {
             exchange.getResponse().getHeaders().add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
 
             ErrorResponse errorResponse = ErrorResponse.of(
-                "UNAUTHORIZED",
-                "Token inválido o no proporcionado",
-                401,
-                exchange.getRequest().getPath().value(),
-                Collections.emptyList(),
-                UUID.randomUUID().toString()
+                    "UNAUTHORIZED",
+                    "Token inválido o no proporcionado",
+                    401,
+                    exchange.getRequest().getPath().value(),
+                    Collections.emptyList(),
+                    UUID.randomUUID().toString()
             );
 
             try {
@@ -91,12 +91,12 @@ public class SecurityConfig {
             exchange.getResponse().getHeaders().add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
 
             ErrorResponse errorResponse = ErrorResponse.of(
-                "FORBIDDEN",
-                "Sin permisos suficientes para acceder a este recurso",
-                403,
-                exchange.getRequest().getPath().value(),
-                Collections.emptyList(),
-                UUID.randomUUID().toString()
+                    "FORBIDDEN",
+                    "Sin permisos suficientes para acceder a este recurso",
+                    403,
+                    exchange.getRequest().getPath().value(),
+                    Collections.emptyList(),
+                    UUID.randomUUID().toString()
             );
 
             try {
@@ -153,6 +153,7 @@ public class SecurityConfig {
             public Object getCredentials() {
                 return token;
             }
+
             @Override
             public Object getPrincipal() {
                 return jwtService.getUserIdFromToken(token);

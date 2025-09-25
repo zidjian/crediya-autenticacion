@@ -231,8 +231,8 @@ class RolUseCaseTest {
             StepVerifier.create(resultado)
                     .expectNextMatches(rol ->
                             rol.getIdRol().equals(idRol) &&
-                            rol.getNombre().equals("USER") &&
-                            rol.getDescripcion().equals("Rol de usuario básico")
+                                    rol.getNombre().equals("USER") &&
+                                    rol.getDescripcion().equals("Rol de usuario básico")
                     )
                     .verifyComplete();
         }

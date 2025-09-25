@@ -30,7 +30,7 @@ public class ErrorResponse {
 
     // Método estático para mantener compatibilidad con tu GlobalErrorHandler
     public static ErrorResponse of(String codigo, String mensaje, int status, String path,
-                                 List<ErrorDetail> detalles, String traceId) {
+                                   List<ErrorDetail> detalles, String traceId) {
         return ErrorResponse.builder()
                 .codigo(codigo)
                 .mensaje(mensaje)

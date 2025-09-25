@@ -7,5 +7,5 @@ public record RespuestaLoginDTO(
         String email,
         String documentoIdentidad,
         String token
-)  {
+) {
 }

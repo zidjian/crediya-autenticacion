@@ -5,7 +5,11 @@ import reactor.core.publisher.Mono;
 
 public interface UsuarioRepository {
     Mono<Usuario> crear(Usuario usuario);
+
     Mono<Boolean> existePorEmail(String email);
-    Mono<Usuario> buscarPorDocumentoIdentidad(String documentoIdentidad);
+
     Mono<Usuario> buscarPorEmail(String email);
+
+    Mono<Usuario> buscarPorIdUsuario(Long idUsuario);
 }
+

@@ -52,25 +52,25 @@ public interface UsuarioControllerDocs {
                     )
             ),
             @RouterOperation(
-                    path = "/api/v1/usuarios/documento/{documento}",
+                    path = "/api/v1/usuarios/{id}",
                     produces = MediaType.APPLICATION_JSON_VALUE,
                     method = RequestMethod.GET,
                     beanClass = UsuarioHandler.class,
-                    beanMethod = "escucharBuscarUsuarioPorDocumento",
+                    beanMethod = "escucharBuscarUsuarioPorId",
                     operation = @Operation(
-                            operationId = "getUserByDocument",
-                            summary = "Buscar usuario por documento de identidad",
-                            description = "Busca un usuario por su documento de identidad. Retorna el usuario completo si existe, o un error 404 si no se encuentra",
+                            operationId = "getUserById",
+                            summary = "Buscar usuario por ID",
+                            description = "Busca un usuario por su ID único. Retorna el usuario completo si existe, o un error 404 si no se encuentra",
                             tags = {"Usuarios"},
                             security = @SecurityRequirement(name = "bearerAuth"),
                             parameters = {
                                     @Parameter(
-                                            name = "documento",
-                                            description = "Documento de identidad del usuario a buscar",
+                                            name = "id",
+                                            description = "ID único del usuario a buscar",
                                             required = true,
                                             in = ParameterIn.PATH,
-                                            schema = @Schema(type = "string"),
-                                            example = "12345678"
+                                            schema = @Schema(type = "integer", format = "int64"),
+                                            example = "1"
                                     )
                             },
                             responses = {
@@ -78,7 +78,7 @@ public interface UsuarioControllerDocs {
                                             content = @Content(schema = @Schema(implementation = RespuestaUsuarioDTO.class))),
                                     @ApiResponse(responseCode = "401", description = "Token inválido o expirado"),
                                     @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
-                                    @ApiResponse(responseCode = "400", description = "Documento de identidad inválido")
+                                    @ApiResponse(responseCode = "400", description = "ID de usuario inválido")
                             }
                     )
             ),

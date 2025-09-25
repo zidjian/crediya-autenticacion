@@ -1,6 +1,8 @@
 # Crediya - Autenticación
 
-Crediya es el backend para gestionar la autenticación de usuarios. Está construido con Spring Boot, siguiendo principios de Arquitectura Limpia Hexagonal y utilizando programación reactiva con Spring WebFlux.
+Crediya es el backend para gestionar la autenticación de usuarios. Está construido con Spring Boot, siguiendo principios
+de Arquitectura Limpia Hexagonal y utilizando programación reactiva con Spring WebFlux.
+
 ## Características
 
 - Registro
@@ -27,7 +29,8 @@ Crediya es el backend para gestionar la autenticación de usuarios. Está constr
    ```
 
 3. Configura las variables de entorno:
-   - La configuración de la aplicación se encuentra en `applications/app-service/src/main/resources/application.yml`. Ajusta los valores según tu entorno (base de datos, secretos, etc.).
+    - La configuración de la aplicación se encuentra en `applications/app-service/src/main/resources/application.yml`.
+      Ajusta los valores según tu entorno (base de datos, secretos, etc.).
 
 ## Uso
 
@@ -39,7 +42,8 @@ Crediya es el backend para gestionar la autenticación de usuarios. Está constr
 
 ## Documentación API
 
-La documentación de la API se encuentra en `http://localhost:8080/swagger-ui/index.html` una vez que el servidor esté en funcionamiento.
+La documentación de la API se encuentra en `http://localhost:8080/swagger-ui/index.html` una vez que el servidor esté en
+funcionamiento.
 
 ## Estructura del proyecto
 
@@ -62,6 +66,7 @@ autenticacion/
 ## Pruebas
 
 Ejecuta las pruebas unitarias y de integración con:
+
 ```bash
 ./gradlew test
 ```

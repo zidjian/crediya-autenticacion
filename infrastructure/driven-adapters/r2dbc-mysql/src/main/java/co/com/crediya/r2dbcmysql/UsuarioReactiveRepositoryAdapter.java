@@ -16,7 +16,7 @@ public class UsuarioReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         UsuarioEntity,
         Long,
         UsuarioReactiveRepository
-> implements UsuarioRepository {
+        > implements UsuarioRepository {
 
     private final UsuarioEntityMapper usuarioEntityMapper;
 
@@ -36,20 +36,20 @@ public class UsuarioReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     @Override
     @Transactional(readOnly = true)
     public Mono<Boolean> existePorEmail(String email) {
-        return super.repository.existsByEmail( email);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Mono<Usuario> buscarPorDocumentoIdentidad(String documentoIdentidad) {
-        return super.repository.findByDocumentoIdentidad(documentoIdentidad)
-                .map(usuarioEntityMapper::toDomain);
+        return super.repository.existsByEmail(email);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Mono<Usuario> buscarPorEmail(String email) {
         return super.repository.findByEmail(email)
+                .map(usuarioEntityMapper::toDomain);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Mono<Usuario> buscarPorIdUsuario(Long idUsuario) {
+        return super.repository.findByIdUsuario(idUsuario)
                 .map(usuarioEntityMapper::toDomain);
     }
 }

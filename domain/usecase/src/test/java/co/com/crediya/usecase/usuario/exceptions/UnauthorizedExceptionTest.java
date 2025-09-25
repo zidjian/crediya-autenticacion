@@ -1,6 +1,7 @@
 package co.com.crediya.usecase.usuario.exceptions;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
 class UnauthorizedExceptionTest {
